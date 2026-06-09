@@ -1,0 +1,6 @@
+=== Discrete-SAC Multi-seed Summary ===
+Seeds: [0]
+Config: {'Emax': 6, 'num_tasks_max': 50, 'bit_range': (10, 40), 'time_slots': 100, 'f_range': (10, 40), 'num_epochs': 100, 'n_prefs_per_epoch': 8, 'seeds': [0], 'smooth_window': 5, 'train_eval_n_pref': 11, 'train_eval_n_epi': 1, 'final_eval_n_pref': 21, 'final_eval_n_epi': 3, 'use_reward_norm': True, 'reward_norm_beta': 0.01, 'file_tag': None, 'alpha_T': 1.0, 'alpha_E': 0.25, 'actor_lr': 0.0001, 'critic_lr': 0.001, 'alpha_init': 0.05, 'alpha_lr': 0.0003, 'tau': 0.005, 'gamma': 0.95, 'hidden_dim': 128, 'target_entropy': -1.0, 'buf_size': 10000, 'batch_size': 64, 'buffer_warmup': 500, 'task_mode': 'random', 'task_kwargs': {}}
+Local HV ref: (32.34657657927875, 4.537295246040031)
+HV per seed: [1.767838886315082]
+HV mean ± std: 1.7678 ± 0.0000

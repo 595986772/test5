@@ -1,0 +1,70 @@
+{
+  "out_prefix": "ablation_hmcss",
+  "ref": [
+    151.998738,
+    4.554716000000001
+  ],
+  "anchor": "src_full3",
+  "rows": [
+    {
+      "name": "src_feedback",
+      "prefix": "abl_mcss_src_feedback",
+      "hv": 252.07679618742813,
+      "run_dir": "results\\abl_mcss_src_feedback_20260604_071911",
+      "n_points": 21,
+      "delay_min": 29.34182,
+      "delay_max": 138.18067,
+      "delay_mean": 53.85425571428571,
+      "energy_min": 1.82342,
+      "energy_max": 3.84615,
+      "energy_mean": 3.2438566666666664,
+      "spread_e_over_mean": 0.6235571444278776,
+      "delta_pct": 14.84955509699049
+    },
+    {
+      "name": "src_prior",
+      "prefix": "abl_mcss_src_prior",
+      "hv": 248.3696978318081,
+      "run_dir": "results\\abl_mcss_src_prior_20260604_175304",
+      "n_points": 21,
+      "delay_min": 31.61809,
+      "delay_max": 107.20359,
+      "delay_mean": 48.535250476190484,
+      "energy_min": 2.22742,
+      "energy_max": 3.63896,
+      "energy_mean": 3.120343333333333,
+      "spread_e_over_mean": 0.45236688697718097,
+      "delta_pct": 13.160551573924538
+    },
+    {
+      "name": "src_random",
+      "prefix": "abl_mcss_src_random",
+      "hv": 228.27526627342814,
+      "run_dir": "results\\abl_mcss_src_random_20260605_014728",
+      "n_points": 21,
+      "delay_min": 27.47009,
+      "delay_max": 78.557,
+      "delay_mean": 38.77479761904762,
+      "energy_min": 2.51078,
+      "energy_max": 3.99088,
+      "energy_mean": 3.5111676190476184,
+      "spread_e_over_mean": 0.4215406840649401,
+      "delta_pct": 4.005260173398701
+    },
+    {
+      "name": "src_full3",
+      "prefix": "abl_mcss_src_full3",
+      "hv": 219.48434713094812,
+      "run_dir": "results\\abl_mcss_src_full3_20260603_201959",
+      "n_points": 21,
+      "delay_min": 27.7854,
+      "delay_max": 101.20368,
+      "delay_mean": 45.082029523809524,
+      "energy_min": 2.39342,
+      "energy_max": 4.14065,
+      "energy_mean": 3.547238095238095,
+      "spread_e_over_mean": 0.49256067765666117,
+      "delta_pct": 0.0
+    }
+  ]
+}

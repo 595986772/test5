@@ -1,0 +1,7 @@
+=== Unified-Reference HV Comparison ===
+Reference point (shared across methods): (111.945856, 4.5483805)
+# seeds = 1, # preferences = 21
+
+PC-FDN(ours)           HV = 114.4553 ± 0.0000
+Discrete SAC           HV = 30.0672 ± 0.0000
+LDQN                   HV = 85.3082 ± 0.0000

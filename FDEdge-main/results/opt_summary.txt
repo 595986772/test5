@@ -1,0 +1,6 @@
+=== Opt (Per-step Exhaustive) Multi-seed Summary ===
+Seeds: [0]
+Config: {'Emax': 6, 'num_tasks_max': 50, 'bit_range': (10, 40), 'time_slots': 100, 'f_range': (10, 40), 'seeds': [0], 'final_eval_n_pref': 21, 'final_eval_n_epi': 3, 'alpha_T': 1.0, 'alpha_E': 0.25, 'task_mode': 'random', 'task_kwargs': {}}
+Local HV ref: (500.40644233476195, 4.528702348192675)
+HV per seed: [586.8647076464463]
+HV mean ± std: 586.8647 ± 0.0000

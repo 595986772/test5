@@ -1,0 +1,14 @@
+=== Ablation 测评结果 (ablation_hmcss) ===
+shared HV ref = (151.9987, 4.5547)   anchor = src_full3
+
+variant               HV    dHV%  #pts    delay[min,max]   energy[min,max]   E_sprd/mean
+src_feedback    252.0768   14.8%    21    [29.34,138.18]       [1.82,3.85]        0.624
+src_prior       248.3697   13.2%    21    [31.62,107.20]       [2.23,3.64]        0.452
+src_random      228.2753    4.0%    21     [27.47,78.56]       [2.51,3.99]        0.422
+src_full3       219.4843    0.0%    21    [27.79,101.20]       [2.39,4.14]        0.493
+
+逐实验完整产出 (全 ω Pareto 点 / 训练曲线 / 监控 / ckpt) 见各 run 目录:
+  src_feedback   -> results\abl_mcss_src_feedback_20260604_071911
+  src_prior      -> results\abl_mcss_src_prior_20260604_175304
+  src_random     -> results\abl_mcss_src_random_20260605_014728
+  src_full3      -> results\abl_mcss_src_full3_20260603_201959

@@ -1,0 +1,5 @@
+name,prefix,hv,delta_pct,n_points,delay_min,delay_max,delay_mean,energy_min,energy_max,energy_mean,spread_e_over_mean,run_dir
+src_feedback,abl_mcss_src_feedback,252.07680,14.84956,21,29.34182,138.18067,53.85426,1.82342,3.84615,3.24386,0.62356,results\abl_mcss_src_feedback_20260604_071911
+src_prior,abl_mcss_src_prior,248.36970,13.16055,21,31.61809,107.20359,48.53525,2.22742,3.63896,3.12034,0.45237,results\abl_mcss_src_prior_20260604_175304
+src_random,abl_mcss_src_random,228.27527,4.00526,21,27.47009,78.55700,38.77480,2.51078,3.99088,3.51117,0.42154,results\abl_mcss_src_random_20260605_014728
+src_full3,abl_mcss_src_full3,219.48435,0.00000,21,27.78540,101.20368,45.08203,2.39342,4.14065,3.54724,0.49256,results\abl_mcss_src_full3_20260603_201959

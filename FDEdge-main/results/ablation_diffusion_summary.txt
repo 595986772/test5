@@ -1,0 +1,10 @@
+=== Ablation 测评结果 (ablation_diffusion) ===
+shared HV ref = (142.0866, 4.1776)   anchor = full
+
+variant               HV    dHV%  #pts    delay[min,max]   energy[min,max]   E_sprd/mean
+full            155.1308    0.0%    21    [28.67,129.17]       [2.23,3.80]        0.475
+no_diffusion    130.2457  -16.0%    21    [36.12,110.23]       [2.39,3.72]        0.388
+
+逐实验完整产出 (全 ω Pareto 点 / 训练曲线 / 监控 / ckpt) 见各 run 目录:
+  full           -> results\abl_diff_full_20260603_201957
+  no_diffusion   -> results\abl_diff_nodiff_20260604_072107

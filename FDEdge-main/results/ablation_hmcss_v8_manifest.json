@@ -1,0 +1,70 @@
+{
+  "out_prefix": "ablation_hmcss_v8",
+  "ref": [
+    226.72669900000002,
+    4.6584900000000005
+  ],
+  "anchor": "src_full3",
+  "rows": [
+    {
+      "name": "src_prior",
+      "prefix": "abl_mcss_v8_src_prior",
+      "hv": 459.8820505522902,
+      "run_dir": "results\\abl_mcss_v8_src_prior_20260607_190109",
+      "n_points": 21,
+      "delay_min": 26.78169,
+      "delay_max": 160.50416,
+      "delay_mean": 54.57779571428572,
+      "energy_min": 1.79978,
+      "energy_max": 4.23499,
+      "energy_mean": 3.4151590476190474,
+      "spread_e_over_mean": 0.7130590306468331,
+      "delta_pct": 24.361414645014847
+    },
+    {
+      "name": "src_feedback",
+      "prefix": "abl_mcss_v8_src_feedback",
+      "hv": 407.2505601909601,
+      "run_dir": "results\\abl_mcss_v8_src_feedback_20260607_082645",
+      "n_points": 21,
+      "delay_min": 27.01075,
+      "delay_max": 204.79565,
+      "delay_mean": 47.891420952380955,
+      "energy_min": 2.27735,
+      "energy_max": 4.03681,
+      "energy_mean": 3.5798590476190477,
+      "spread_e_over_mean": 0.491488624718398,
+      "delta_pct": 10.12879437129479
+    },
+    {
+      "name": "src_random",
+      "prefix": "abl_mcss_v8_src_random",
+      "hv": 380.18540621290015,
+      "run_dir": "results\\abl_mcss_v8_src_random_20260608_035415",
+      "n_points": 21,
+      "delay_min": 27.62024,
+      "delay_max": 78.50189,
+      "delay_mean": 38.728204761904756,
+      "energy_min": 2.61939,
+      "energy_max": 4.12593,
+      "energy_mean": 3.61342,
+      "spread_e_over_mean": 0.41692911424633733,
+      "delta_pct": 2.809828927319557
+    },
+    {
+      "name": "src_full3",
+      "prefix": "abl_mcss_v8_src_full3",
+      "hv": 369.7948048154702,
+      "run_dir": "results\\abl_mcss_v8_src_full3_20260606_220737",
+      "n_points": 21,
+      "delay_min": 29.32282,
+      "delay_max": 206.11518,
+      "delay_mean": 53.66789904761905,
+      "energy_min": 2.40766,
+      "energy_max": 3.88347,
+      "energy_mean": 3.390349047619048,
+      "spread_e_over_mean": 0.4352973629769543,
+      "delta_pct": 0.0
+    }
+  ]
+}

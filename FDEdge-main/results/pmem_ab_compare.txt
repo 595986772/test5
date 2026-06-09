@@ -1,0 +1,12 @@
+=== 最小 Pareto 版 A/B (V8, eval_use_prior 两臂都开; 唯一变量=取prior方式) ===
+共享 ref=(163.97485600000002, 4.4542530000000005)   单 seed=0
+
+臂                                 HV      延迟下界      能耗下界  #pts
+baseline (加权平均prior)        243.8398     27.93     2.305    21
+pareto   (非支配筛选prior)       240.5570     30.26     1.932    21
+
+ΔHV (pareto-baseline) = -3.2828  (-1.3%)
+
+判读: ΔHV>0 且能耗/延迟下界不退 → Pareto 筛选有料, 上多 seed;
+      ΔHV≈/<0                  → 筛选没用, 瓶颈不在 prior 质量, 打住。
+注: 单 seed 单 run, 别下定论; gate 率见各 run 的 obuf 日志。

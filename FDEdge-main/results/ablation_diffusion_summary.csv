@@ -1,0 +1,3 @@
+name,prefix,hv,delta_pct,n_points,delay_min,delay_max,delay_mean,energy_min,energy_max,energy_mean,spread_e_over_mean,run_dir
+full,abl_diff_full,155.13078,0.00000,21,28.67009,129.16960,51.14332,2.22540,3.79781,3.30885,0.47521,results\abl_diff_full_20260603_201957
+no_diffusion,abl_diff_nodiff,130.24568,-16.04137,21,36.12475,110.22623,58.05781,2.39322,3.71676,3.41525,0.38754,results\abl_diff_nodiff_20260604_072107

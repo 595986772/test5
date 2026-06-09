@@ -1,0 +1,40 @@
+{
+  "out_prefix": "ablation_diffusion",
+  "ref": [
+    142.08656100000002,
+    4.177592000000001
+  ],
+  "anchor": "full",
+  "rows": [
+    {
+      "name": "full",
+      "prefix": "abl_diff_full",
+      "hv": 155.13078083553208,
+      "run_dir": "results\\abl_diff_full_20260603_201957",
+      "n_points": 21,
+      "delay_min": 28.67009,
+      "delay_max": 129.1696,
+      "delay_mean": 51.14332,
+      "energy_min": 2.2254,
+      "energy_max": 3.79781,
+      "energy_mean": 3.3088519047619047,
+      "spread_e_over_mean": 0.47521316917722434,
+      "delta_pct": 0.0
+    },
+    {
+      "name": "no_diffusion",
+      "prefix": "abl_diff_nodiff",
+      "hv": 130.24568356539208,
+      "run_dir": "results\\abl_diff_nodiff_20260604_072107",
+      "n_points": 21,
+      "delay_min": 36.12475,
+      "delay_max": 110.22623,
+      "delay_mean": 58.057812380952385,
+      "energy_min": 2.39322,
+      "energy_max": 3.71676,
+      "energy_mean": 3.4152452380952374,
+      "spread_e_over_mean": 0.38753878791385693,
+      "delta_pct": -16.04136660442836
+    }
+  ]
+}

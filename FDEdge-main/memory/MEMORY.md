@@ -1,0 +1,7 @@
+- [当前要做的事](project_fdedge_next_action.md) — 用户在跑完整训练, 回来给 csv 后立刻做的 3 个步骤
+- [当前修复状态](project_fdedge_current_state.md) — v5 已应用的 3 项修复 (通道归一化 / 删 αT-αE / target_entropy 0.5) + 监控日志
+- [Opt 物理下界](project_fdedge_opt_baseline.md) — Opt 21 点数据: delay 下界 24.92s, energy 下界 0.90J, 跨度 3.22J
+- [C1 验收线](project_fdedge_c1_acceptance.md) — 4 条硬指标 + 验收代码片段, 跑完训练立即对照
+- [项目核心诉求](project_fdedge_core_appeal.md) — Set-Transformer 已删, 卖点是 ω-自适应分配 + buffer 驱动的泛化/漂移鲁棒
+- [奖励通道归一化诊断](project_fdedge_reward_scaling.md) — αT/αE 配原始 r_T/r_E 量级差 20×, 参考项目用 0.01/5 常数解决
+- [数据引用必须严谨](feedback_data_rigor.md) — 任何具体数字必须先读原始文件核对, 禁止凭印象编造

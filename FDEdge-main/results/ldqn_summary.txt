@@ -1,0 +1,6 @@
+=== LDQN Multi-seed Summary ===
+Seeds: [0]
+Config: {'Emax': 6, 'num_tasks_max': 50, 'bit_range': (10, 40), 'time_slots': 100, 'f_range': (10, 40), 'num_epochs': 100, 'n_prefs_per_epoch': 8, 'seeds': [0], 'smooth_window': 5, 'train_eval_n_pref': 11, 'train_eval_n_epi': 1, 'final_eval_n_pref': 21, 'final_eval_n_epi': 3, 'alpha_T': 1.0, 'alpha_E': 0.25, 'lr': 0.001, 'gamma': 0.95, 'epsilon_start': 1.0, 'epsilon_min': 0.05, 'epsilon_decay': 0.9995, 'target_update': 100, 'hidden_dim': 128, 'emb_dim': 64, 'buf_size': 10000, 'batch_size': 64, 'buffer_warmup': 500, 'task_mode': 'random', 'task_kwargs': {}}
+Local HV ref: (103.02419911650388, 4.133103226531661)
+HV per seed: [50.99520223621525]
+HV mean ± std: 50.9952 ± 0.0000

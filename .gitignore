@@ -1,0 +1,52 @@
+# Python/cache
+**/__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE / local assistant state
+.idea/
+.claude/
+FDEdge-main/.idea/
+FDEdge-main/.claude/
+
+# Generated handoff/output artifacts: keep only the text handoff context
+outputs/**
+!outputs/
+!outputs/CODEX_HANDOFF_CONTEXT.md
+
+# Heavy or generated experiment artifacts
+FDEdge-main/results/**
+!FDEdge-main/results/
+!FDEdge-main/results/*.txt
+!FDEdge-main/results/*.csv
+!FDEdge-main/results/*.json
+!FDEdge-main/results/*.png
+!FDEdge-main/results/eval_testset.pkl
+FDEdge-main/results/*/
+FDEdge-main/_archive/
+FDEdge-main/reference/
+FDEdge-main/results_omega_drift/
+FDEdge-main/result_frequency/
+FDEdge-main/logs/
+FDEdge-main/quick-result/
+
+# Large/local documents and papers
+FDEdge-main/articles/
+FDEdge-main/中期/
+FDEdge-main/中期考核表/
+*.docx
+*.pdf
+
+# Model checkpoints / binary runtime artifacts
+*.pt
+*.pth
+*.ckpt
+*.npz
+*.npy
+
+# OS files
+Thumbs.db
+.DS_Store
