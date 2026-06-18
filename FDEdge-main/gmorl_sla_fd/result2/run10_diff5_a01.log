@@ -30,3 +30,6 @@ ep260 w=0.69 | delay= 10.12 energy= 0.060 viol=0.130 p95= 22.18 | alpha=0.1000 H
 ep270 w=0.71 | delay=  7.48 energy= 0.067 viol=0.071 p95= 21.93 | alpha=0.1000 H=0.647 c_loss=0.026
 ep280 w=0.74 | delay= 11.58 energy= 0.050 viol=0.221 p95= 29.13 | alpha=0.1000 H=0.654 c_loss=0.029
 ep290 w=0.23 | delay= 10.14 energy= 0.018 viol=0.152 p95= 52.72 | alpha=0.1000 H=0.667 c_loss=0.032
+ep299 w=0.83 | delay=  8.32 energy= 0.059 viol=0.081 p95= 20.53 | alpha=0.1000 H=0.654 c_loss=0.026
+
+[saved] result2\run10_diff5_a01  (actor/critic/meta/train_log)
