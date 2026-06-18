@@ -52,14 +52,21 @@ class DenoiseNet(nn.Module):
 # 暖启动扩散: 从 prior 起步 (而非 randn)
 # --------------------------------------------------------------
 class WarmStartDiffusion(Diffusion):
-    def p_sample_loop(self, state, prior_probs, prior=None, start_mode='prior'):
+    def p_sample_loop(self, state, prior_probs, prior=None, start_mode='prior', det=False):
+        # det=True: 确定性反向 (全程只走后验均值, 不注随机噪声)。
+        #   推理/eval 用 —— 让动作成为 cond 的干净确定函数, argmax 稳、输出更尖 (low-temp diffusion)。
+        #   训练 rollout 仍用 det=False (随机反向) 保留探索/熵。
         if start_mode == 'prior':
             x = prior_probs.clone()              # 从上一步分配概率暖启动
         else:
             x = torch.randn_like(prior_probs)    # 消融对照: 普通随机起步
         for i in reversed(range(self.n_timesteps)):
             t = torch.full((x.size(0),), i, device=x.device, dtype=torch.long)
-            x = self.p_sample(x, t, state, prior=prior)
+            if det:
+                mean, _, _ = self.p_mean_variance(x=x, t=t, s=state, prior=prior)
+                x = mean
+            else:
+                x = self.p_sample(x, t, state, prior=prior)
         return x
 
 
@@ -82,17 +89,18 @@ class FDActor(nn.Module):
                                             model=self.denoise, beta_schedule='vp',
                                             denoising_steps=denoising_steps)
 
-    def forward(self, servers, preference, mask2, prior_probs, act_mask=None):
+    def forward(self, servers, preference, mask2, prior_probs, act_mask=None, det=False):
         """servers [B,67,11], preference [B,2], mask2 [B,11], prior_probs [B,11] -> probs [B,11].
 
         mask2:    padding mask (合法服务器), 喂编码器清零补零槽。
         act_mask: 可选输出掩码 (= mask2 ∩ 准入掩码); 给了就用它屏蔽动作, 否则退回 mask2。
                   准入掩码只会更严 (去掉预计超时的服务器), 故恒 ⊆ mask2。
+        det:      True=确定性反向采样 (推理/eval); False=随机反向 (训练, 保留探索)。
         """
         cond = self.encoder(servers, preference, mask2)                      # 编码一次 (用 padding mask)
         cond_prior = prior_probs if self.use_prior_cond else None             # P2: prior 也当条件喂网络
         raw = self.diffusion.p_sample_loop(cond, prior_probs, prior=cond_prior,
-                                           start_mode=self.start_mode)        # 去噪 T 步, 复用 cond
+                                           start_mode=self.start_mode, det=det)  # 去噪 T 步, 复用 cond
         probs = F.softmax(raw, dim=1)
         out_mask = mask2 if act_mask is None else act_mask
         probs = probs * out_mask                                             # 屏蔽无效/预计超时服务器
@@ -119,8 +127,8 @@ class MLPActor(nn.Module):
             nn.Linear(hidden, n_slots),
         )
 
-    def forward(self, servers, preference, mask2, prior_probs, act_mask=None):
-        cond = self.encoder(servers, preference, mask2)
+    def forward(self, servers, preference, mask2, prior_probs, act_mask=None, det=False):
+        cond = self.encoder(servers, preference, mask2)  # det 忽略 (MLP 无随机反向)
         probs = F.softmax(self.head(cond), dim=1)
         out_mask = mask2 if act_mask is None else act_mask
         probs = probs * out_mask

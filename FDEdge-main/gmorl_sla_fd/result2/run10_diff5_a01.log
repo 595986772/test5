@@ -1,0 +1,32 @@
+device=cuda  tag=run10_diff5_a01  episodes=300  start_mode=prior  sla=True
+  deadline=20.0  admission=False margin=1.00  task_cap=20000000.0
+ep000 w=0.89 | delay= 19.14 energy= 0.030 viol=0.356 p95= 54.54 | alpha=nan H=nan c_loss=nan
+ep010 w=0.23 | delay= 20.87 energy= 0.006 viol=0.423 p95= 50.60 | alpha=0.1000 H=0.137 c_loss=0.078
+ep020 w=0.57 | delay=  9.03 energy= 0.049 viol=0.128 p95= 30.78 | alpha=0.1000 H=0.231 c_loss=0.125
+ep030 w=0.13 | delay= 14.89 energy= 0.033 viol=0.304 p95= 46.44 | alpha=0.1000 H=0.285 c_loss=0.108
+ep040 w=0.25 | delay= 11.99 energy= 0.025 viol=0.273 p95= 32.22 | alpha=0.1000 H=0.296 c_loss=0.081
+ep050 w=0.81 | delay= 13.74 energy= 0.060 viol=0.230 p95= 42.40 | alpha=0.1000 H=0.329 c_loss=0.060
+ep060 w=0.20 | delay= 11.26 energy= 0.031 viol=0.177 p95= 69.48 | alpha=0.1000 H=0.382 c_loss=0.037
+ep070 w=0.48 | delay= 10.03 energy= 0.047 viol=0.236 p95= 30.03 | alpha=0.1000 H=0.418 c_loss=0.032
+ep080 w=0.04 | delay=  9.88 energy= 0.029 viol=0.143 p95= 24.96 | alpha=0.1000 H=0.436 c_loss=0.032
+ep090 w=0.67 | delay= 13.82 energy= 0.056 viol=0.276 p95= 37.95 | alpha=0.1000 H=0.459 c_loss=0.029
+ep100 w=0.38 | delay= 12.68 energy= 0.054 viol=0.263 p95= 39.26 | alpha=0.1000 H=0.463 c_loss=0.028
+ep110 w=0.94 | delay=  9.12 energy= 0.062 viol=0.130 p95= 31.69 | alpha=0.1000 H=0.462 c_loss=0.027
+ep120 w=0.18 | delay=  9.58 energy= 0.034 viol=0.188 p95= 35.57 | alpha=0.1000 H=0.462 c_loss=0.030
+ep130 w=0.11 | delay= 18.23 energy= 0.016 viol=0.268 p95= 72.41 | alpha=0.1000 H=0.448 c_loss=0.031
+ep140 w=0.56 | delay=  6.71 energy= 0.047 viol=0.091 p95= 22.86 | alpha=0.1000 H=0.471 c_loss=0.032
+ep150 w=0.37 | delay= 12.16 energy= 0.039 viol=0.250 p95= 36.26 | alpha=0.1000 H=0.473 c_loss=0.031
+ep160 w=0.18 | delay= 14.97 energy= 0.041 viol=0.286 p95= 50.83 | alpha=0.1000 H=0.491 c_loss=0.031
+ep170 w=0.11 | delay= 10.22 energy= 0.022 viol=0.258 p95= 41.49 | alpha=0.1000 H=0.505 c_loss=0.034
+ep180 w=1.00 | delay=  8.30 energy= 0.078 viol=0.078 p95= 23.11 | alpha=0.1000 H=0.511 c_loss=0.035
+ep190 w=1.00 | delay= 13.05 energy= 0.058 viol=0.247 p95= 47.62 | alpha=0.1000 H=0.530 c_loss=0.034
+ep200 w=0.08 | delay= 16.16 energy= 0.045 viol=0.344 p95= 51.72 | alpha=0.1000 H=0.543 c_loss=0.030
+ep210 w=0.90 | delay=  6.58 energy= 0.063 viol=0.056 p95= 22.25 | alpha=0.1000 H=0.577 c_loss=0.035
+ep220 w=0.12 | delay= 13.96 energy= 0.041 viol=0.230 p95= 62.16 | alpha=0.1000 H=0.599 c_loss=0.029
+ep230 w=0.14 | delay= 12.66 energy= 0.025 viol=0.255 p95= 58.48 | alpha=0.1000 H=0.603 c_loss=0.030
+ep240 w=0.27 | delay=  9.31 energy= 0.037 viol=0.136 p95= 24.83 | alpha=0.1000 H=0.616 c_loss=0.031
+ep250 w=0.96 | delay= 13.32 energy= 0.076 viol=0.244 p95= 41.64 | alpha=0.1000 H=0.625 c_loss=0.031
+ep260 w=0.69 | delay= 10.12 energy= 0.060 viol=0.130 p95= 22.18 | alpha=0.1000 H=0.625 c_loss=0.028
+ep270 w=0.71 | delay=  7.48 energy= 0.067 viol=0.071 p95= 21.93 | alpha=0.1000 H=0.647 c_loss=0.026
+ep280 w=0.74 | delay= 11.58 energy= 0.050 viol=0.221 p95= 29.13 | alpha=0.1000 H=0.654 c_loss=0.029
+ep290 w=0.23 | delay= 10.14 energy= 0.018 viol=0.152 p95= 52.72 | alpha=0.1000 H=0.667 c_loss=0.032

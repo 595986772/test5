@@ -27,7 +27,15 @@ MAX_EDGE_NUM = 10
 class MEC_Env():
     def __init__(self, conf_file='config_sla.json', conf_name='MEC_Config1', w=1.0, fc=None, fe=None,
                  deadline=15.0, sla_penalty_scale=0.05, sla_lambda=1.0, return_vec=True,
-                 task_size_cap=None):
+                 task_size_cap=None,
+                 perturb=False, spike_prob=0.06, spike_mult=5.0, spike_len=5):
+        # perturb: 系统侧扰动 (测动作生成稳定性, 不含 ω 漂移=那是 ω 泛化)
+        #   信道波动: 每步重 roll Rayleigh; 负载尖峰: 概率触发突发任务流。
+        self.perturb = perturb
+        self.spike_prob = spike_prob
+        self.spike_mult = spike_mult
+        self.spike_len = spike_len
+        self._spike_left = 0
         # task_size_cap: 覆盖配置里的 task_size_H (任务大小上限)。
         #   multi-part 原版 100e6 bit / 边缘 2e6 bit/s = 单任务最多 50s 计算 -> 大任务必违约的结构地板。
         #   封顶 (如 20e6) 消除该地板, 让可行域能容下 delay-energy 权衡。
@@ -108,6 +116,7 @@ class MEC_Env():
         self.unassigned_task_list = []
         self.action = ACTION_TO_CLOUD
         # ===== SLA 记账 (每个 episode 重置) =====
+        self._spike_left = 0
         self._task_id_counter = 0
         self._episode_delays = []      # 本 episode 所有已完成任务的端到端时延
         self._episode_energies = []    # 本 episode 所有已完成任务的能耗 (off+exe)
@@ -144,6 +153,13 @@ class MEC_Env():
     def step(self, actions):
         assert self.done==False, 'enviroment already output done'
         self.step_cnt += 1
+        # ===== 系统侧扰动 (perturb): 信道每步重 roll + 负载尖峰 =====
+        if self.perturb:
+            self.cloud_off_datarate, self.edge_off_datarate = self.updata_off_datarate()
+            if self._spike_left > 0:
+                self._spike_left -= 1
+            elif np.random.rand() < self.spike_prob:
+                self._spike_left = self.spike_len
         self.step_cloud_dtime = 0
         self.step_edge_dtime = 0
         self.step_energy = 0
@@ -446,8 +462,9 @@ class MEC_Env():
     
     def generate_task(self):
         #####################################################
+        _lam = self.possion_lamda * (self.spike_mult if self._spike_left > 0 else 1.0)  # 负载尖峰
         for u in range(self.user_num):
-            task_num = np.random.poisson(self.possion_lamda)     
+            task_num = np.random.poisson(_lam)
             for i in range(task_num):
                 task = {}
                 theta = self.task_size_exp_theta + self.wave_peak*np.sin(self.step_cnt*2*np.pi/self.wave_cycle)

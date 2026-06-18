@@ -130,7 +130,9 @@ class FDSACAgent:
         act_mask = None
         if act_mask_np is not None:
             act_mask = torch.as_tensor(act_mask_np[None], dtype=torch.float32, device=self.device)
-        probs = self.actor(servers, pref, mask2, prior, act_mask=act_mask)
+        # 注: 扩散用原生随机反向更好 (确定性反向=分布外, 实测更差), 故 eval 默认 det=False;
+        #     stochastic 仅控制动作选择 (argmax vs 采样)。det 开关保留作实验用。
+        probs = self.actor(servers, pref, mask2, prior, act_mask=act_mask, det=False)
         p = probs.cpu().numpy()[0]
         p = np.clip(p, 0.0, 1.0)
         s = p.sum()
