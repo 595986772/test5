@@ -1,0 +1,9 @@
+{
+  "conf": "multi-part",
+  "deadline": 15.0,
+  "episodes": 300,
+  "denoising_steps": 3,
+  "start_mode": "prior",
+  "sla": true,
+  "seed": 0
+}

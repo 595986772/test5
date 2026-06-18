@@ -2,13 +2,13 @@
 21档 × 20场景/档   ref=(39.78843238449576, 4.681342077880316)
 
 方法                            HV        类型
-oracle-greedy(hard)      950.755 heuristic
-V8-src_feedback          263.029   trained
-V8-src_full3             260.091   trained
-V8-src_prior             184.810   trained
-V8-src_random             61.945   trained
+oracle-greedy(hard)       32.217 heuristic
+V8-src_feedback           24.363   trained
+V8-src_prior              23.574   trained
+V8-src_random             22.515   trained
+V8-src_full3              21.875   trained
 
-① greedy vs 最强训练模型: greedy=950.8  best_trained=263.0  → greedy 仍碾压
-② prior vs feedback: prior=184.8  feedback=263.0  → feedback 反超
+① greedy vs 最强训练模型: greedy=32.2  best_trained=24.4  → greedy 仍碾压
+② prior vs feedback: prior=23.6  feedback=24.4  → feedback 反超
 
 注: 这是校准秤上的单模型重测; 跨训练 seed 的稳健性仍需多 seed (但秤已不再是噪声源)。

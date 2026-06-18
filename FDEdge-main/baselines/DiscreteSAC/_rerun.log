@@ -1,0 +1,35 @@
+[dsac] Config (output tag = dsac_norm): {'Emax': 6, 'num_tasks_max': 50, 'bit_range': (10, 40), 'time_slots': 100, 'f_range': (10, 40), 'num_epochs': 100, 'n_prefs_per_epoch': 8, 'seeds': [0], 'smooth_window': 5, 'train_eval_n_pref': 11, 'train_eval_n_epi': 1, 'final_eval_n_pref': 21, 'final_eval_n_epi': 3, 'use_reward_norm': True, 'reward_norm_beta': 0.01, 'file_tag': None, 'alpha_T': 1.0, 'alpha_E': 0.25, 'actor_lr': 0.0001, 'critic_lr': 0.001, 'alpha_init': 0.05, 'alpha_lr': 0.0003, 'tau': 0.005, 'gamma': 0.95, 'hidden_dim': 128, 'target_entropy': 0.5, 'buf_size': 10000, 'batch_size': 64, 'buffer_warmup': 500, 'task_mode': 'random', 'task_kwargs': {}}
+[dsac] Device: cuda
+[task_generator] active mode = random (<RandomTaskGenerator>)
+
+========== [dsac] Seed 0 ==========
+[dsac seed 0] fixed HV ref = (97.888, 7.873)
+[dsac seed 0 epoch 001/100] HV=27.9634 d=48.9622 e=4.1541 alpha=0.0489 H(¦Ð)=0.513 elapsed=146.2s
+[dsac seed 0 epoch 005/100] HV=304.1693 d=21.6160 e=3.9130 alpha=0.0427 H(¦Ð)=0.507 elapsed=858.3s
+[dsac seed 0 epoch 010/100] HV=285.4553 d=16.0962 e=4.2212 alpha=0.0427 H(¦Ð)=0.493 elapsed=1907.1s
+[dsac seed 0 epoch 015/100] HV=231.6946 d=11.3919 e=4.4017 alpha=0.0431 H(¦Ð)=0.494 elapsed=2948.1s
+[dsac seed 0 epoch 020/100] HV=316.5206 d=21.4656 e=4.2741 alpha=0.0563 H(¦Ð)=0.505 elapsed=4001.7s
+[dsac seed 0 epoch 025/100] HV=345.3780 d=29.0262 e=4.2180 alpha=0.0653 H(¦Ð)=0.535 elapsed=5007.2s
+[dsac seed 0 epoch 030/100] HV=455.4046 d=55.7301 e=3.5072 alpha=0.0556 H(¦Ð)=0.497 elapsed=6109.3s
+[dsac seed 0 epoch 035/100] HV=241.5083 d=26.4134 e=4.2206 alpha=0.0489 H(¦Ð)=0.501 elapsed=7169.3s
+[dsac seed 0 epoch 040/100] HV=410.0807 d=43.3893 e=3.8416 alpha=0.0534 H(¦Ð)=0.501 elapsed=8366.4s
+[dsac seed 0 epoch 045/100] HV=372.5007 d=39.4221 e=3.9787 alpha=0.0555 H(¦Ð)=0.505 elapsed=9459.2s
+[dsac seed 0 epoch 050/100] HV=284.7511 d=48.2812 e=3.8665 alpha=0.0499 H(¦Ð)=0.503 elapsed=10593.9s
+[dsac seed 0 epoch 055/100] HV=277.8790 d=17.7776 e=4.5875 alpha=0.0675 H(¦Ð)=0.508 elapsed=11758.6s
+[dsac seed 0 epoch 060/100] HV=420.5837 d=45.3002 e=3.5708 alpha=0.0501 H(¦Ð)=0.495 elapsed=12889.9s
+[dsac seed 0 epoch 065/100] HV=351.7451 d=35.5541 e=3.7398 alpha=0.0627 H(¦Ð)=0.504 elapsed=14173.5s
+[dsac seed 0 epoch 070/100] HV=183.9296 d=22.4608 e=4.5937 alpha=0.0512 H(¦Ð)=0.505 elapsed=15362.4s
+[dsac seed 0 epoch 075/100] HV=240.0458 d=27.4263 e=3.4608 alpha=0.0613 H(¦Ð)=0.500 elapsed=16513.0s
+[dsac seed 0 epoch 080/100] HV=140.7676 d=30.9431 e=4.4260 alpha=0.0566 H(¦Ð)=0.503 elapsed=18272.6s
+[dsac seed 0 epoch 085/100] HV=213.5581 d=67.4756 e=3.5200 alpha=0.0621 H(¦Ð)=0.499 elapsed=19600.8s
+[dsac seed 0 epoch 090/100] HV=296.9204 d=24.8095 e=4.5370 alpha=0.0516 H(¦Ð)=0.503 elapsed=20846.4s
+[dsac seed 0 epoch 095/100] HV=201.6813 d=18.4067 e=4.7617 alpha=0.0680 H(¦Ð)=0.495 elapsed=22112.5s
+[dsac seed 0 epoch 100/100] HV=359.4523 d=37.2359 e=4.2251 alpha=0.0860 H(¦Ð)=0.500 elapsed=23244.6s
+[dsac seed 0] learned reward ¦Ò: ¦Ò_T=0.7193 ¦Ò_E=1.0681 (ratio ¦Ò_T/¦Ò_E=0.673)
+  [ckpt] saved results\dsac_norm_ckpt_seed0/policy.pt
+  [saved] results\testset_dsac_norm_pareto.csv  HV=18.969
+
+[dsac] all seeds done in 24217.3s
+
+[dsac] Final HV (ref=(51.691780383885046, 4.486672626844522)): mean=11.8258 std=0.0000
+[dsac] Done. Results in D:\python_project\å®žéªŒç‰ˆ5\FDEdge-main\results

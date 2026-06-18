@@ -178,9 +178,10 @@ def run_single_seed(cfg, seed, device):
         log_interval = max(1, cfg['num_epochs'] // 20)
         if (epoch + 1) % log_interval == 0 or epoch == 0:
             h_mean = float(np.mean([l['H'] for l in ep_hs])) if ep_hs else 0.0
+            a_mean = float(np.mean([l['alpha'] for l in ep_hs])) if ep_hs else 0.0
             print(f"[dsac seed {seed} epoch {epoch + 1:03d}/{cfg['num_epochs']}] "
                   f"HV={hv:.4f} d={log_d[-1]:.4f} e={log_e[-1]:.4f} "
-                  f"H(π)={h_mean:.3f} elapsed={time.time() - t0:.1f}s")
+                  f"alpha={a_mean:.4f} H(π)={h_mean:.3f} elapsed={time.time() - t0:.1f}s")
 
     if normalizer is not None:
         sig = normalizer.sigma
@@ -192,6 +193,27 @@ def run_single_seed(cfg, seed, device):
                                 n_eval_epi=cfg['final_eval_n_epi'],
                                 seed=seed * 100000 + SHARED_EVAL_SEED_OFFSET,
                                 alpha_T=cfg['alpha_T'], alpha_E=cfg['alpha_E'])
+
+    _name = cfg.get('file_tag') or ('dsac_norm' if cfg.get('use_reward_norm') else 'dsac')
+
+    # 存 checkpoint (策略网络 + 重建元信息): 评估与训练解耦, 换卷子可离线重评
+    try:
+        from eval_baselines_on_testset import save_baseline_ckpt
+        save_baseline_ckpt('dsac', _name, agent, seed,
+                           ctor_meta=dict(state_dim=env.state_dim,
+                                          action_dim=cfg['Emax'],
+                                          hidden_dim=cfg['hidden_dim']))
+    except Exception as _e:
+        print(f'[dsac] ckpt save skipped: {_e}')
+
+    # 路 B: 在固定卷子(校准秤)上评估, 落到统一可比表 results/testset_compare.*
+    # (best-effort: 失败只打印, 不影响本次训练产出)
+    try:
+        from eval_baselines_on_testset import evaluate_trained_agent
+        evaluate_trained_agent(_name, agent, k_eval=cfg.get('testset_k', 20))
+    except Exception as _e:
+        print(f'[dsac] testset eval skipped: {_e}')
+
     return dict(
         seed=seed,
         log_hv=np.array(log_hv),
@@ -219,7 +241,7 @@ def main():
         actor_lr=1e-4, critic_lr=1e-3,
         alpha_init=0.05, alpha_lr=3e-4,
         tau=0.005, gamma=0.95,
-        hidden_dim=128, target_entropy=-1.0,
+        hidden_dim=128, target_entropy=0.5,   # 离散 |A|=6, H∈[0,log6≈1.79]; -1.0 不可达→α崩塌, 对齐 PC-FDN 取 0.5
         buf_size=10000, batch_size=64, buffer_warmup=500,
         # ---- 任务到达模式 ('random' / 'poisson' / 'trace') ----
         task_mode='random',

@@ -153,6 +153,27 @@ def run_single_seed(cfg, seed, device):
                                 n_eval_epi=cfg['final_eval_n_epi'],
                                 seed=seed * 100000 + SHARED_EVAL_SEED_OFFSET,
                                 alpha_T=cfg['alpha_T'], alpha_E=cfg['alpha_E'])
+
+    _name = cfg.get('file_tag') or 'ldqn'
+
+    # 存 checkpoint (策略网络 + 重建元信息): 评估与训练解耦, 换卷子可离线重评
+    try:
+        from eval_baselines_on_testset import save_baseline_ckpt
+        save_baseline_ckpt('ldqn', _name, agent, seed,
+                           ctor_meta=dict(state_dim=env.state_dim,
+                                          action_dim=cfg['Emax'],
+                                          hidden_dim=cfg['hidden_dim'],
+                                          emb_dim=cfg['emb_dim']))
+    except Exception as _e:
+        print(f'[ldqn] ckpt save skipped: {_e}')
+
+    # 路 B: 在固定卷子(校准秤)上评估, 落到统一可比表 results/testset_compare.*
+    try:
+        from eval_baselines_on_testset import evaluate_trained_agent
+        evaluate_trained_agent(_name, agent, k_eval=cfg.get('testset_k', 20))
+    except Exception as _e:
+        print(f'[ldqn] testset eval skipped: {_e}')
+
     return dict(
         seed=seed,
         log_hv=np.array(log_hv),

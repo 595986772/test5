@@ -30,7 +30,7 @@ from mofd_environment import MOFDEnvironment
 from ablation_agents import MOFD_SAC_V5_HMCSS
 from mofd_main import OmegaLatentBuffer
 
-DEV = torch.device('cpu')
+DEV = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # GPU 空时用 GPU, 扩散 eval 快很多
 
 
 def load_src(mode, ts):
@@ -57,9 +57,18 @@ def main():
     K = args.k
     print(f'固定卷子: 21档 × {K}场景/档  ref={ref}\n')
 
+    # 把每个模型在固定卷子上的 21 点前沿存盘 (供 rescale_hv.py 在多个候选 ref 下重算)
+    def _dump_pts(tag, pts):
+        with open(f'results/testset_{tag}_pareto.csv', 'w', encoding='utf-8') as f:
+            f.write('omega_T,delay,energy\n')
+            for om, (d, e) in zip(ts['prefs'], pts):
+                oT = float(np.asarray(om, dtype=float).ravel()[0])
+                f.write(f'{oT:.4f},{float(d):.6f},{float(e):.6f}\n')
+
     rows = []
     # 1) oracle greedy (精确物理 + 全信息) —— 上界参照
-    _, hv = eval_greedy_on_testset(ts, hard=True, k_eval=K)
+    pts, hv = eval_greedy_on_testset(ts, hard=True, k_eval=K)
+    _dump_pts('greedy_omega', pts)
     rows.append(('oracle-greedy(hard)', hv, 'heuristic'))
     print(f'  oracle-greedy(hard): HV={hv:.3f}', flush=True)
 
@@ -67,8 +76,9 @@ def main():
     for mode in ['prior', 'feedback', 'random', 'full3']:
         ag, ob = load_src(mode, ts)
         MOFD_SAC_V5_HMCSS.MCSS_MODE = mode
-        _, hv = eval_agent_on_testset(ag, ts, k_eval=K, eval_use_prior=True,
-                                      omega_buf=ob, use_true_feedback=True)
+        pts, hv = eval_agent_on_testset(ag, ts, k_eval=K, eval_use_prior=True,
+                                        omega_buf=ob, use_true_feedback=True)
+        _dump_pts(f'v8_src_{mode}', pts)
         rows.append((f'V8-src_{mode}', hv, 'trained'))
         print(f'  V8-src_{mode}: HV={hv:.3f}', flush=True)
 

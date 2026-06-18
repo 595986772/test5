@@ -1,0 +1,17 @@
+=== 固定卷子 HV 多标尺重算 (helpers.hypervolume_2d 已修: 裁 ref 框外点) ===
+方法数=8  oracle=['greedy_omega']  病态(不定盒子)=['greedy_energy']
+current_ref   = (39.79, 4.681)  随机nadir×1.1, 偏小
+union_deploy  = (277.62, 5.325)  盒子 delay[10.7,252.4] energy[2.97,4.84]
+union_all     = (488.68, 5.325)  含 oracle
+normalized    = 两轴归一到[0,1] (用 union_deploy 盒子), ref=(1.1,1.1)
+
+method               type       current  union_deploy     union_all    normalized
+---------------------------------------------------------------------------------
+greedy_omega       ORACLE        32.217       751.327      1468.522         1.479
+rand                             26.274       547.188       997.321         1.034
+round_robin                      26.512       544.389       991.639         1.028
+dsac_norm                        11.964       445.287       820.043         0.811
+ldqn                              5.159       426.889       797.850         0.778
+greedy_delay                     21.318       403.450       725.924         0.713
+genmosac                          0.000       366.803       864.400         0.684
+greedy_energy   degenerate         0.000         0.000       553.172         0.000

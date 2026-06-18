@@ -1,0 +1,7 @@
+config,mean_violation,HV,is_gmorl
+GMORL-equiv (no SLA),0.2730,0.4318,1
+"Ours (SLA-ch, no adm)",0.2395,0.5045,0
+Ours +adm m=1.2,0.2272,0.3052,0
+Ours +adm m=1.0,0.1627,0.3212,0
+Ours +adm m=0.8,0.0781,0.3348,0
+Ours +adm m=0.6,0.0145,0.3311,0

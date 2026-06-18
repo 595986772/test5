@@ -1,0 +1,13 @@
+{
+  "conf": "multi-part",
+  "deadline": 20.0,
+  "task_size_cap": 20000000.0,
+  "n_envs": 32,
+  "total_steps": 12000,
+  "env_steps": 384000,
+  "sla_lambda": 0.0,
+  "admission": false,
+  "margin": 1.0,
+  "denoising_steps": 3,
+  "seed": 0
+}

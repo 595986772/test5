@@ -154,6 +154,44 @@ def eval_greedy_on_testset(ts, temperature=1.0, hard=False, k_eval=None,
     return pts, float(hypervolume_2d(pts, ts['ref']))
 
 
+def eval_policy_on_testset(ts, action_fn, k_eval=None, eval_seed=EVAL_SEED,
+                           reset_fn=None):
+    """统一评估: 任意策略在固定卷子上 → (21点[delay,energy], HV)。
+
+    与 eval_agent_on_testset / eval_greedy_on_testset **同一把秤** (同卷、同 ref、钉死种子),
+    所以 baseline / 启发式 / NN 跑出来的 HV 可直接互比 (路 B 统一评估的核心)。
+
+    action_fn(env, t, n, omega, rng, E, f_E) -> int  逐 (t,n) 返回服务器动作:
+      * NN agent: 用 env.get_state(t,n) + env.get_valid_mask(), 忽略 E/f_E;
+      * 启发式  : 用传入的 E (有效服务器数) / f_E (频率向量), 与 baselines/Heuristic 同口径。
+    reset_fn(): 可选, 每个场景 (episode) 开始时调用一次 —— 如 Round-Robin 计数器清零。
+    """
+    torch.manual_seed(eval_seed)
+    np.random.seed(eval_seed)
+    rng = np.random.default_rng(eval_seed)
+    env = MOFDEnvironment(**ts['env_params'])
+    pts = []
+    for oi, omega in enumerate(ts['prefs']):
+        scen = ts['scenarios'][oi] if k_eval is None else ts['scenarios'][oi][:k_eval]
+        om = np.asarray(omega, np.float32)
+        d_all, e_all = [], []
+        for (E, f_E, tran_rate, tasks) in scen:
+            env.reset_env(tasks, E, f_E, tran_rate, omega)
+            if reset_fn is not None:
+                reset_fn()
+            sd = se = n = 0.0
+            for t in range(env.time_slots - 1):
+                for nn in range(len(env.tasks_bit[t])):
+                    a = int(action_fn(env, t, nn, om, rng, int(E), f_E))
+                    _, _, d, e, _ = env.step(t, nn, a)
+                    sd += d; se += e; n += 1
+                env.update_proc_queues(t)
+            d_all.append(sd / max(n, 1)); e_all.append(se / max(n, 1))
+        pts.append([float(np.mean(d_all)), float(np.mean(e_all))])
+    pts = np.array(pts)
+    return pts, float(hypervolume_2d(pts, ts['ref']))
+
+
 if __name__ == '__main__':
     import argparse
     ap = argparse.ArgumentParser()

@@ -32,10 +32,39 @@ from genmosac_model import GenMOSAC, DictReplayBuffer, build_dict_state
 RESULTS_DIR = os.path.join(PROJECT_ROOT, 'results')
 
 
+class RewardNormalizer:
+    """逐目标奖励归一化 (PopArt-lite, 与 baselines/DiscreteSAC 完全对齐).
+
+    维护 (r_T, r_E) 各自的 running RMS = EMA(r²) 的平方根, 标量化前把两路奖励
+    各除以自己的 σ, 抵消 delay(~30) 与 energy(~4) 的量级差. 仅训练期更新.
+    """
+    def __init__(self, beta=0.01, eps=1e-3):
+        self.beta = float(beta)
+        self.eps = float(eps)
+        self._ms = np.ones(2, dtype=np.float64)   # EMA of r²
+        self._init = False
+
+    def update(self, r_T, r_E):
+        sq = np.array([r_T, r_E], dtype=np.float64) ** 2
+        if not self._init:
+            self._ms = np.maximum(sq, self.eps ** 2)
+            self._init = True
+        else:
+            self._ms = (1.0 - self.beta) * self._ms + self.beta * sq
+
+    @property
+    def sigma(self):
+        return np.sqrt(self._ms)
+
+    def normalize(self, r_T, r_E):
+        s = np.maximum(np.sqrt(self._ms), self.eps)
+        return r_T / s[0], r_E / s[1]
+
+
 def run_episode(env, agent, tasks, E, f_E, tran_rate, omega,
                 n_bins, stochastic=True, buf=None,
                 batch_size=64, buffer_warmup=500,
-                alpha_T=1.0, alpha_E=0.25):
+                alpha_T=1.0, alpha_E=0.25, normalizer=None):
     env.reset_env(tasks, E, f_E, tran_rate, omega)
     sum_d, sum_e, n_tasks, losses = 0.0, 0.0, 0, []
     for t in range(env.time_slots - 1):
@@ -45,7 +74,12 @@ def run_episode(env, agent, tasks, E, f_E, tran_rate, omega,
             m = env.get_valid_mask()
             a = agent.take_action(s, m, stochastic=stochastic)
             r_T, r_E, d, e, real_a = env.step(t, n, a)
-            r = float(omega[0] * alpha_T * r_T + omega[1] * alpha_E * r_E)
+            if normalizer is not None:
+                normalizer.update(r_T, r_E)
+                rn_T, rn_E = normalizer.normalize(r_T, r_E)
+                r = float(omega[0] * alpha_T * rn_T + omega[1] * alpha_E * rn_E)
+            else:
+                r = float(omega[0] * alpha_T * r_T + omega[1] * alpha_E * r_E)
 
             if n == T_len - 1:
                 nt, nn = t + 1, 0
@@ -108,6 +142,9 @@ def run_single_seed(cfg, seed, device):
     buf = DictReplayBuffer(cfg['buf_size'])
     rng = np.random.default_rng(seed + 1)
 
+    normalizer = RewardNormalizer(beta=cfg.get('reward_norm_beta', 0.01)) \
+        if cfg.get('use_reward_norm', False) else None
+
     fixed_ref = compute_fixed_ref(env, seed=seed + 7777)
     print(f"[genmosac seed {seed}] fixed HV ref = ({fixed_ref[0]:.3f}, {fixed_ref[1]:.3f})")
 
@@ -123,6 +160,7 @@ def run_single_seed(cfg, seed, device):
                 n_bins=cfg['n_bins'], stochastic=True, buf=buf,
                 batch_size=cfg['batch_size'], buffer_warmup=cfg['buffer_warmup'],
                 alpha_T=cfg['alpha_T'], alpha_E=cfg['alpha_E'],
+                normalizer=normalizer,
             )
             ep_ds.append(d); ep_es.append(e); ep_losses.extend(losses)
 
@@ -140,9 +178,10 @@ def run_single_seed(cfg, seed, device):
         log_interval = max(1, cfg['num_epochs'] // 20)
         if (epoch + 1) % log_interval == 0 or epoch == 0:
             h_mean = float(np.mean([l['H'] for l in ep_losses])) if ep_losses else 0.0
+            a_mean = float(np.mean([l['alpha'] for l in ep_losses])) if ep_losses else 0.0
             print(f"[genmosac seed {seed} epoch {epoch + 1:03d}/{cfg['num_epochs']}] "
                   f"HV={hv:.4f} d={log_d[-1]:.4f} e={log_e[-1]:.4f} "
-                  f"H(π)={h_mean:.3f} elapsed={time.time() - t0:.1f}s")
+                  f"alpha={a_mean:.4f} H(π)={h_mean:.3f} elapsed={time.time() - t0:.1f}s")
 
     pts_final = evaluate_pareto(env, agent,
                                 n_pref=cfg['final_eval_n_pref'],
@@ -150,6 +189,32 @@ def run_single_seed(cfg, seed, device):
                                 seed=seed * 100000 + SHARED_EVAL_SEED_OFFSET,
                                 alpha_T=cfg['alpha_T'], alpha_E=cfg['alpha_E'],
                                 n_bins=cfg['n_bins'])
+
+    _name = cfg.get('file_tag') or 'genmosac'
+    _nb = cfg['n_bins']
+
+    # 存 checkpoint (策略网络含 DictEncoder + 重建元信息): 评估与训练解耦, 换卷子可离线重评
+    try:
+        from eval_baselines_on_testset import save_baseline_ckpt
+        save_baseline_ckpt('genmosac', _name, agent, seed,
+                           ctor_meta=dict(task_pref_dim=4,
+                                          per_srv_dim=env.per_server_dim,
+                                          n_bins=cfg['n_bins'], Emax=cfg['Emax'],
+                                          hidden=cfg['hidden_dim'], emb=cfg['emb_dim']),
+                           n_bins=cfg['n_bins'])
+    except Exception as _e:
+        print(f'[genmosac] ckpt save skipped: {_e}')
+
+    # 路 B: 在固定卷子(校准秤)上评估, 落到统一可比表 results/testset_compare.*
+    # genmosac 用 dict 状态, 故传 state_builder = build_dict_state(env,t,n,n_bins)
+    try:
+        from eval_baselines_on_testset import evaluate_trained_agent
+        evaluate_trained_agent(_name, agent,
+                               state_builder=lambda env, t, n: build_dict_state(env, t, n, _nb),
+                               k_eval=cfg.get('testset_k', 20))
+    except Exception as _e:
+        print(f'[genmosac] testset eval skipped: {_e}')
+
     return dict(
         seed=seed,
         log_hv=np.array(log_hv),
@@ -170,12 +235,14 @@ def main():
         seeds=[0], smooth_window=5,
         train_eval_n_pref=11, train_eval_n_epi=1,
         final_eval_n_pref=21, final_eval_n_epi=3,
+        # ---- 奖励归一化 (与 baselines/DiscreteSAC 对齐, 抵消 r_T/r_E 量级差) ----
+        use_reward_norm=True, reward_norm_beta=0.01,
         # ---- GenMOSAC 超参 ----
         alpha_T=1.0, alpha_E=0.25,
         actor_lr=1e-4, critic_lr=1e-3,
         alpha_init=0.05, alpha_lr=3e-4,
         tau=0.005, gamma=0.95,
-        hidden_dim=128, emb_dim=64, target_entropy=-1.0,
+        hidden_dim=128, emb_dim=64, target_entropy=0.5,   # 离散 |A|=6, H∈[0,log6≈1.79]; -1.0 不可达→α崩塌, 对齐 PC-FDN 取 0.5
         n_bins=10,   # 队列负载直方图 bin 数
         buf_size=10000, batch_size=64, buffer_warmup=500,
         # ---- 任务到达模式 ('random' / 'poisson' / 'trace') ----

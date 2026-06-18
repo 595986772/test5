@@ -1,0 +1,34 @@
+[genmosac] Config: {'Emax': 6, 'num_tasks_max': 50, 'bit_range': (10, 40), 'time_slots': 100, 'f_range': (10, 40), 'num_epochs': 100, 'n_prefs_per_epoch': 8, 'seeds': [0], 'smooth_window': 5, 'train_eval_n_pref': 11, 'train_eval_n_epi': 1, 'final_eval_n_pref': 21, 'final_eval_n_epi': 3, 'use_reward_norm': True, 'reward_norm_beta': 0.01, 'alpha_T': 1.0, 'alpha_E': 0.25, 'actor_lr': 0.0001, 'critic_lr': 0.001, 'alpha_init': 0.05, 'alpha_lr': 0.0003, 'tau': 0.005, 'gamma': 0.95, 'hidden_dim': 128, 'emb_dim': 64, 'target_entropy': 0.5, 'n_bins': 10, 'buf_size': 10000, 'batch_size': 64, 'buffer_warmup': 500, 'task_mode': 'random', 'task_kwargs': {}}
+[genmosac] Device: cuda
+[task_generator] active mode = random (<RandomTaskGenerator>)
+
+========== [genmosac] Seed 0 ==========
+[genmosac seed 0] fixed HV ref = (97.888, 7.873)
+[genmosac seed 0 epoch 001/100] HV=777.4378 d=58.6693 e=3.9956 alpha=0.0549 H(¦Ð)=0.515 elapsed=346.3s
+[genmosac seed 0 epoch 005/100] HV=1454.5483 d=43.2238 e=3.8470 alpha=0.0866 H(¦Ð)=0.497 elapsed=1876.6s
+[genmosac seed 0 epoch 010/100] HV=204.9891 d=50.5926 e=4.0912 alpha=0.0728 H(¦Ð)=0.482 elapsed=3735.2s
+[genmosac seed 0 epoch 015/100] HV=186.6001 d=60.5595 e=3.8083 alpha=0.0442 H(¦Ð)=0.494 elapsed=5653.2s
+[genmosac seed 0 epoch 020/100] HV=184.3400 d=52.0950 e=4.2070 alpha=0.0749 H(¦Ð)=0.512 elapsed=7647.0s
+[genmosac seed 0 epoch 025/100] HV=229.1977 d=51.5075 e=4.1278 alpha=0.0700 H(¦Ð)=0.508 elapsed=9604.9s
+[genmosac seed 0 epoch 030/100] HV=1146.5383 d=80.7485 e=3.4165 alpha=0.0623 H(¦Ð)=0.512 elapsed=11682.7s
+[genmosac seed 0 epoch 035/100] HV=204.4439 d=70.6946 e=3.6531 alpha=0.0541 H(¦Ð)=0.509 elapsed=13904.1s
+[genmosac seed 0 epoch 040/100] HV=1155.2297 d=126.6017 e=3.3329 alpha=0.0655 H(¦Ð)=0.491 elapsed=15981.5s
+[genmosac seed 0 epoch 045/100] HV=19.3135 d=76.7599 e=3.7951 alpha=0.0607 H(¦Ð)=0.519 elapsed=18965.6s
+[genmosac seed 0 epoch 050/100] HV=190.7276 d=44.5499 e=4.0930 alpha=0.0786 H(¦Ð)=0.528 elapsed=21163.0s
+[genmosac seed 0 epoch 055/100] HV=0.0000 d=85.3826 e=3.9609 alpha=0.0657 H(¦Ð)=0.510 elapsed=23437.1s
+[genmosac seed 0 epoch 060/100] HV=355.5801 d=74.2375 e=3.0518 alpha=0.0538 H(¦Ð)=0.531 elapsed=25326.9s
+[genmosac seed 0 epoch 065/100] HV=2178.4244 d=86.4573 e=3.1912 alpha=0.0764 H(¦Ð)=0.508 elapsed=28231.8s
+[genmosac seed 0 epoch 070/100] HV=88.3758 d=59.3346 e=3.9734 alpha=0.0629 H(¦Ð)=0.507 elapsed=31021.0s
+[genmosac seed 0 epoch 075/100] HV=115.3232 d=73.5801 e=3.0579 alpha=0.0896 H(¦Ð)=0.490 elapsed=33736.2s
+[genmosac seed 0 epoch 080/100] HV=1525.5072 d=47.2497 e=4.2769 alpha=0.1023 H(¦Ð)=0.484 elapsed=36501.3s
+[genmosac seed 0 epoch 085/100] HV=1000.8263 d=61.2865 e=3.4989 alpha=0.0615 H(¦Ð)=0.511 elapsed=39206.5s
+[genmosac seed 0 epoch 090/100] HV=470.8486 d=58.0595 e=4.2253 alpha=0.0728 H(¦Ð)=0.498 elapsed=42002.9s
+[genmosac seed 0 epoch 095/100] HV=1984.9654 d=54.1239 e=3.8630 alpha=0.0764 H(¦Ð)=0.506 elapsed=44745.9s
+[genmosac seed 0 epoch 100/100] HV=529.0103 d=59.6862 e=4.4056 alpha=0.0883 H(¦Ð)=0.507 elapsed=47461.7s
+  [ckpt] saved results\genmosac_ckpt_seed0/policy.pt
+  [saved] results\testset_genmosac_pareto.csv  HV=204.291
+
+[genmosac] all seeds done in 49569.1s
+
+[genmosac] Final HV (ref=(366.7598260831893, 3.9156664797664527)): mean=416.0807 std=0.0000
+[genmosac] Done. Results in D:\python_project\å®žéªŒç‰ˆ5\FDEdge-main\results

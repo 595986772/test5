@@ -1,0 +1,12 @@
+=== 固定卷子统一评估 (同卷同 ref, 可直接比) ===
+ref=(39.788, 4.681)  K=20
+
+method                  type         HV          d[min,max]        e[min,max]   Espr/m
+genmosac             trained    204.291    [92.271,252.385]     [2.967,4.840]    0.503
+ldqn                 trained     32.437    [32.340,65.2517]     [3.567,4.540]    0.248
+greedy_omega       heuristic     32.217    [12.493,427.264]     [1.238,4.555]    0.930
+round_robin        heuristic     26.512    [18.223,34.7348]     [3.205,4.316]    0.302
+rand               heuristic     26.274    [18.551,34.8126]     [3.191,4.314]    0.305
+greedy_delay       heuristic     21.318    [10.661,25.1365]     [3.796,4.828]    0.242
+dsac_norm            trained     18.969    [20.609,55.1632]     [3.549,4.782]    0.300
+greedy_energy      heuristic      0.000    [345.85,444.253]     [1.096,2.089]    0.671

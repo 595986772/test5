@@ -1,0 +1,2573 @@
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+1
+Generalizable Pareto-Optimal Offloading with
+Reinforcement Learning in Mobile Edge Computing
+Ning Yang*, Junrui Wen*, Meng Zhang, Ming Tang
+Abstract—Mobile edge computing (MEC) is essential for next-
+generation mobile network applications that prioritize various
+performance metrics, including delays and energy efficiency.
+However, conventional single-objective scheduling solutions can-
+not be directly applied to practical systems in which the prefer-
+ences (i.e., the weights of different objectives) are often unknown
+or challenging to specify in advance. In this study, we formulate a
+multi-objective offloading problem for MEC with multiple edges
+to minimize the sum of expected long-term energy consumption
+and delay while considering unknown preferences. To address
+the challenge of unknown preferences and the potentially diverse
+MEC systems, we propose a generalizable multi-objective (deep)
+reinforcement learning (GMORL)-based tasks offloading frame-
+work, which employs the Discrete Soft Actor-Critic (Discrete-
+SAC) method. Our method uses a single policy model to efficiently
+schedule tasks based on varying preferences and adapt to
+heterogeneous MEC systems with different CPU frequencies and
+server quantities. Under the proposed framework, we introduce a
+histogram-based state encoding method for constructing features
+for multiple edges in MEC systems, a sophisticated reward
+function for accurately computing the utilities of delay and
+energy consumption, and a novel neural network architecture
+for improving generalization. Simulation results demonstrate that
+our proposed GMORL scheme enhances the hypervolume of the
+Pareto front by up to 121.0% compared to benchmarks.
+Index Terms—Mobile edge computing, multi-objective rein-
+forcement learning, resource scheduling, discrete-soft actor-critic.
+I. INTRODUCTION
+A. Background and Challenges
+T
+He rise of next-generation networks and the increasing
+use of mobile devices have resulted in an exponential
+growth of data transmission and diverse computing needs.
+With the emergence of new computing-intensive applications,
+there is a possibility that device computing capacity may
+not suffice. To tackle this challenge, mobile edge computing
+(MEC) has emerged as a promising computing paradigm.
+MEC enables the offloading of computing workloads to edge
+or cloud networks, offering the potential for achieving low la-
+tency and high efficiency [1]. In MEC systems, task offloading
+is crucial in achieving low latency and energy consumption
+[2]. The scheduling of task offloading in MEC systems is
+Ning Yang, Junrui Wen are with Institute of Automation, Chinese Academy
+of Sciences, Beijing, 100190, China. (e-mail: ning.yang@ia.ac.cn, junrui-
+wen@hust.edu.cn).
+Meng Zhang is with the ZJU-UIUC Institute, Zhejiang University, Zhejiang,
+314499, China. (e-mail: mengzhang@intl.zju.edu.cn).
+Ming Tang is with the Department of Computer Science and Engineering,
+Southern University of Science and Technology, Shenzhen, 518055, China.
+(e-mail: tangm3@sustech.edu.cn).
+(*Corresponding author: Ning Yang, Junrui Wen)
+challenging due to the dynamic and unpredictable nature of
+users’ workloads and computing requirements. Some works
+apply traditional optimization methods to schedule for MEC
+systems [3], [4]. These methods assume deterministic objective
+functions that cannot cope well with uncertainty or dynamics
+in the problem parameters.
+The application of deep reinforcement learning (DRL) has
+shown substantial potential in addressing sequential decision-
+making problems and have demonstrated the effectiveness
+of applying DRL in MEC systems to address the unknown
+dynamics. For instance, Cui et al. [5] employed DRL to solve
+the user association and offloading sub-problems in MEC
+networks. Lei et al. [6] investigated computation offloading
+and multi-user scheduling algorithms in edge IoT networks
+and proposed a DRL algorithm to solve the continuous-time
+problem, supporting implementation based on semi-distributed
+auctions. Jiang et al. [7] proposed an online DRL-based
+resource scheduling framework to minimize the delay in large-
+scale MEC systems. However, a challenge that has been
+overlooked by researchers is the issue of generalization.
+Challenge 1: DRL policies are typically trained for specific
+environments, rendering them less adaptable to novel contexts.
+Nevertheless, it is important to acknowledge that the training
+and application environments may not always align and that
+there may be variations in their parameters. Consequently, the
+scheme must be flexible enough to accommodate a range of
+diverse and unknown preferences. To achieve the generaliza-
+tion of preferences, we have to seek out new methodologies
+to address the following questions:
+Question 1: How should we design a scheduling policy that
+can apply to various MEC systems with diverse preferences?
+The challenge of addressing this problem can be summa-
+rized in two aspects. First, there may be conflicts between
+different objectives, such as delay and energy consumption,
+that cannot be optimized simultaneously. Second, since MEC
+systems serve diverse applications with varying preferences,
+it is challenging to design an offloading policy that can
+generate Pareto optimal solutions under diverse and unknown
+preferences.
+It is worth noting that the direct application of single-
+objective DRL through scalarization, which involves taking
+a weighted sum, is not a valid approach due to the following
+issues [8]:
+1) Impossibility: Weights may be unknown when designing
+or learning an offloading scheme.
+2) Infeasibility: Weights may be diverse, which is true when
+MEC systems have different restrictive constraints on
+latency or energy.
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+2
+3) Undesirability: Even if weights are known, nonlinear
+objective functions may lead to non-stationary optimal
+policies.
+To effectively address these challenges, we propose to em-
+ploy multi-objective reinforcement learning (MORL) to design
+a task offloading policy. However, this method faces certain
+limitations. Firstly, when dealing with a large number of pref-
+erences, it can become computationally and storage-intensive
+[8]. Secondly, since the preference is typically unknown in
+advance, it becomes infeasible to search for a specific policy
+that matches a particular preference from a pre-trained set
+of policies [9]. Therefore, we propose a novel single-policy
+MORL method to schedule tasks for MEC systems. To this
+end, we propose to use a single policy to accommodate
+diverse preferences. Compared with multi-policy approaches,
+our single-policy MORL method is more lightweight and more
+feasible for deployment.
+Although the MORL approach can deal with diverse pref-
+erence problems, there are other generalization issues worth
+considering.
+Question 2: How should we deploy a well-trained DRL-
+based policy to new MEC systems with different CPU fre-
+quencies and server quantities?
+Existing DRL methods for task offloading scheduling in
+MEC networks have, to date, exhibited limited research per-
+taining to matters of generalization. Yan et al. [10] intro-
+duced a DRL method to optimize offloading scheduling, but
+they exclusively considered a fixed preference and a set of
+constant system parameters. Li et al. [11] proposed a meta-
+reinforcement learning method to lead an DRL-based policy
+quickly adaptive to new environments. However, this approach
+lacks the capability to generalize to new environments with
+varying server quantities. Gao et al. [12] proposed a multi-
+agent DRL method to schedule tasks for large-scale MEC
+systems. This method can handle systems with different quan-
+tities of servers, but it can only optimize for a single fixed
+preference. Ren et al. [13] exploited learning-experience utility
+to improve the generalization of a DRL policy. Nonetheless,
+when the quantity of servers varied, the policy network had to
+be redesigned and retrained. In contrast, a majority of other
+studies [2], [5]–[7], [14] have predominantly disregarded the
+aspect of generalization in their methodologies.
+Solving the generalization problem has been the subject
+of research, and various methods have been proposed. Two
+widely used technologies to improve the generalization of
+DRL methods are domain randomization [15] and adapting
+online [16]. These methods utilize context to characterize a
+system with specific parameters. For a contextual Markov
+decision process (MDP) [17], [18], domain randomization
+approaches train an DRL model in randomized environments
+to make the model adapt to diverse systems. Therefore, we
+improve the MORL and propose the generalizable multi-
+objective reinforcement learning (GMORL). We summarize
+the differences between our method and other existing works
+in the study of generalization in Table 1, with comprehensive
+details provided in the Appendix.
+B. Research Goals, Approaches, and Contributions
+In summary, there are three main challenges to MEC task
+offloading. Firstly, task requirements are uncertain, and the
+system is dynamic. Secondly, there are diverse and unknown
+preferences. Thirdly, task offloading policies must be general-
+izable to accommodate different systems.
+The main contributions of this paper are as follows:
+• Multi-objective MEC Framework: We formulate the
+multi-objective contextual MDP problem framework.
+Compared with previous works, our framework focuses
+on the Pareto optimal solutions, which characterize the
+performance of the offloading scheduling policy with
+multiple objectives under different preferences.
+• Multi-objective Decision Model: We propose a novel
+GMORL method based on Discrete-SAC to solve the
+multi-objective problem. Our proposed method aims to
+achieve the Pareto near-optimal solution for diverse pref-
+erences through only one policy model. Moreover, we in-
+troduce a histogram-based encoding method to construct
+features for multi-edge systems and a sophisticated re-
+ward function to compute delay and energy consumption.
+• Multi-system Generalization Model: To guarantee the
+generalization of our method so that it applies to MEC
+environments with varying CPU frequencies and edge
+quantities after training. We propose a novel neural
+network architecture that supports generalization.
+• Numerical
+Results:
+Compared
+to
+benchmarks,
+our
+GMORL scheme increases the hypervolume of the Pareto
+front up to 121.0%. Moreover, our approach exhibits
+strong generalization.
+II. SYSTEM MODEL
+We consider a set of servers E = {0, 1, 2, ..., E} with one
+remote cloud server (denoted by index 0) and E edge servers
+(denoted by set E′ = {1, 2, ..., E}), and consider a set of users
+U = {1, 2, ..., U} in an MEC system. We use index e ∈E
+to denote a server and use index e′ ∈E′ to denote an edge
+server. Index u ∈U denotes a user. Our model is a continuous-
+time system and has discrete decision steps. Consider one
+episode consisting of T steps, and each step is denoted by
+t ∈{1, 2, ..., T}, each with a duration of ∆t seconds. The
+MEC system model we consider is illustrated in Fig. A1 of
+the Appendix.
+A. System Overview
+Consider multiple users and servers in the MEC system.
+Tasks randomly arrive at users. Users may offload the tasks
+to the servers. Let M = {1, 2, ..., M} denote the set of tasks
+in an episode. We use m ∈M to denote a task and use Lm
+to denote the size of task m, which follows an exponential
+distribution [26] with mean ¯L. At the beginning of each
+step, the arrival time of a series of tasks follows a Poisson
+distribution for each user, and the Poisson arrival rate for each
+user is λp. The tasks are placed in a queue with a first in,
+first out (FIFO) queue strategy. In each step, the system will
+offload the first task in the queue to one of the servers. Then
+the task is removed from the queue.
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+3
+TABLE I
+RELATE WORKS ABOUT DRL METHOD FOR OFFLOADING TASK SCHEDULING IN MEC SYSTEM.
+Refs.
+Generalization across different aspects
+Multi-preference
+System parameters
+Server quantities
+[2], [5], [6], [14], [19], [20]
+✘
+✘
+✘
+[11], [13], [21]–[23]
+✘
+✔
+✘
+[7], [24], [25]
+✘
+✘
+✔
+[12]
+✘
+✔
+✔
+Ours
+✔
+✔
+✔
+We assumed that the uplink operates in an interference-free
+ideal communication environment, i.e., only additive white
+Gaussian noise (AWGN) is considered, and factors such as
+co-channel interference are not introduced. The mean of task
+size ¯L represents the demand for tasks. If the computational
+capability of the system exceeds the demand, the scheduling
+pressure decreases. Conversely, if the demand surpasses the
+capability, the system will continuously accumulate tasks
+over time. Therefore, we consider a system that balances
+computational capability and task demand. The mean of task
+size ¯L satisfies
+∆t
+ X
+e∈E
+fe
+η
+!
+= λp ¯LU,
+(1)
+where fe is the CPU frequency (in cycles per second) of server
+e, and η is the number of CPU cycles required for computing
+a one-bit task.
+We consider a Rayleigh fading channel model in the MEC
+network. We denote h ∈RU×(E+1) as the U ×(E+1) channel
+matrix. Thus, the achievable data rate from user u to server e
+is
+Cu,e = Wlog2
+ 
+1 + poff|hu,e|2
+σ2
+!
+, ∀u ∈U, e ∈E,
+(2)
+where σ2 is additive white Gaussian noise (AWGN) power,
+and W is the bandwidth. The offloading power is poff, and
+the channel coefficient from user u to server e is hu,e.
+In real scenarios, simultaneous offloading flows in the
+uplink will generate interference. This interference will have
+an impact on both dense 5G/6G or license-free MEC deploy-
+ments. Suppose that server e has Ne connected users, and
+the users are arranged in descending order of channel gain as
+|h1,e| ≥|h2,e| ≥· · · ≥|hNe,e|.
+To simplify the analysis of the initial model, it is as-
+sumed here that the uplink is in an ideal interference-free
+communication environment, and only AWGN is considered.
+Therefore, the data rate is described by Eq.(2). In practical
+scenarios, the interference of synchronous offloading flows
+cannot be ignored, and the interference term Iu,e needs to be
+introduced to correct the data rate, as shown in the following
+equations. Suppose that server e has Ne connected users, and
+the users are arranged in descending order of channel gain as
+|h1,e| ≥|h2,e| ≥· · · ≥|hNe,e|. Denote the interference at the
+receiver of user u when offloading to server e as Iu,e. Then
+we have the interference Iu,e as follows:
+Iu,e =
+U
+X
+u′=1
+poff|hu′,e|2
+(3)
+Therefore, the achievable data rate with the interference from
+user u to server e is
+C′
+u,e = Wlog2
+ 
+1 + poff|hu,e|2
+σ2 + Iu,e
+!
+.
+(4)
+Offloading: We denote the offloading decision (matrix) as
+x = {xm,e}m∈M,e∈E, where xm,e ∈{0, 1} is an offloading
+indicator variable; xm,e = 1 indicates that task m is offloaded
+to server e. Here, we adopt a binary offloading assumption,
+where each task is either fully offloaded to a server (xm,e = 1)
+or executed locally (xm,e = 0) without splitting. If task m
+comes from user u, the offloading delay for task m is given
+by [27]
+T off
+m =
+X
+e∈E
+xm,e
+Lm
+Cu,e
+,
+∀m ∈M.
+(5)
+The offloading energy consumption for task m with offloading
+power poff is
+Eoff
+m = poffT off
+m ,
+∀m ∈M.
+(6)
+Execution: Each server executes tasks in parallel. We
+denote the beginning of step t as time instant τt, given by
+τt = t∆t. The computing speed for each task in server e at
+time instant τt is
+qe(τt) =
+fe
+nexe
+e
+(τt)η ,
+∀e ∈E,
+(7)
+We define nexe
+e
+(τt) as the number of tasks that are being
+executed in server e at time τt. The nexe
+e
+(τt) tasks share
+equally the computing resources of server e. Thus, we give
+the relation between task size Lm and execution delay T exe
+m
+for task m as
+Lm = gm(T exe
+m )
+=
+X
+e∈E
+xm,e
+Z m∆t+T off
+m +T exe
+m
+m∆t+T off
+m
+qe(τ) dτ, ∀m ∈M,
+(8)
+where τ is a time instant. The integral function gm(T exe
+m ) de-
+notes the aggregate executed size for task m from m∆t+T off
+m
+to m∆t + T off
+m + T exe
+m . Therefore, execution time delay T exe
+m
+of task m is
+T exe
+m
+= Lm · nexe
+e (τt)η
+fe
+, ∀m ∈M.
+(9)
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+4
+The total energy consumption of execution for task m is
+modeled as [27]
+Eexe
+m
+=
+X
+e∈E
+xm,eκηf 2
+e Lm, ∀m ∈M,
+(10)
+where κ denotes an effective capacitance coefficient for each
+CPU cycle.
+To summarize, the overall delay and the overall energy
+consumption for task m ∈M are
+Tm = T off
+m + T exe
+m , Em = Eoff
+m + Eexe
+m ,
+(11)
+respectively.
+B. Problem Formulation
+We introduce the preference vector ω = (ωT, ωE), which
+satisfies ωT + ωE = 1. A (stochastic) sequential decision-
+making policy is a mapping π. For any given task m and
+system state, policy π selects an offloading decision xm,e
+according to a certain probability distribution.
+Given any one possible ω, the multi-objective resource
+scheduling problem under the policy π is given by
+min
+π
+Ex∼π
+" X
+m∈M
+γm (ωTTm + ωEEm)
+#
+(12a)
+s.t.
+xm,e ∈{0, 1},
+∀m ∈M, ∀e ∈E,
+(12b)
+X
+e∈E
+xm,e = 1,
+∀m ∈M,
+(12c)
+where constraint (12b) restricts task offloading variables to be
+binary, and constraint (12c) guarantees that each task can be
+only offloaded to one server. A discount factor γ characterizes
+the discounted objective in the future. The expectation E
+accounts for the distribution of the task size Lm, the arrival of
+users, and stochastic policy π. The problem (12) is non-convex
+due to constraint (12b), which requires the decision variables
+to be discrete. This makes the feasible set non-convex, as
+linear combinations of feasible solutions are not guaranteed
+to remain feasible, leading to the non-convex nature of the
+problem. Moreover, when making offloading decisions at each
+time step, the sizes of tasks arriving after that time step are
+unknown. As shown in Eq. (7), (8), and (9), the execution
+time of a task is related to the offloading decisions made
+in subsequent time steps, as well as the size of the tasks.
+Therefore, without information about future time steps, convex
+optimization methods cannot be used to solve problem (12).
+The challenge of this problem lies in two aspects: First,
+there is a conflict between optimizing delay and energy con-
+sumption. According to Eq. (4) and Eq. (8), the main energy
+consumption of a task depends on execution energy, which
+increases with higher server CPU frequencies. Therefore,
+reducing energy consumption involves offloading tasks to edge
+servers with lower CPU frequencies. According to Eq. (3) and
+Eq. (7), the main delay of a task depends on execution time,
+which is lower on cloud servers with higher CPU frequencies,
+but increases as more tasks are executed on a single server.
+Thus, reducing delay requires offloading a larger number of
+tasks to cloud servers with higher CPU frequencies, leading to
+a conflict between optimizing delay and energy consumption.
+Second, the scheduling policy must optimize problem (10)
+under distinct preferences to achieve the optimal solution,
+rather than just under a fixed preference.
+Consider a preference set Ω= {ω1, ω2, ..., ωn} with n
+preferences. A generalizable scheduling policy aims at solving
+Problem (12) given any preference in Ω. To facilitate illustra-
+tion, we consider the policy under a specific preference as a
+sub-policy. When dealing with the preference set Ω, we define
+the sub-policies set Π = {π1, π2, ..., πn}. Let yπ denote the
+performance vector for π, given by
+yπ = {yπ
+T, yπ
+E} =
+( X
+m∈M
+Tm,
+X
+m∈M
+Em
+)
+.
+(13)
+The
+performance
+profile
+of
+Π
+is
+denoted
+as
+Y
+=
+{yπ1, yπ2, ..., yπn}. We consider Pareto front [8] to character-
+ize the optimal trade-offs between two performance metrics.
+For a sub-policies set Π, Pareto front PF(Π) is the undomi-
+nated set:
+PF(Π) = {π ∈Π | ∄π′ ∈Π : yπ′ ≻P yπ},
+(14)
+where ≻P is the Pareto dominance relation, satisfying
+yπ ≻P yπ′ ⇐⇒
+(∀i : yπ
+i ≥yπ′
+i ) ∧(∃i : yπ
+i > yπ′
+i ), i ∈{T, E}.
+(15)
+We aim to approximate the exact Pareto front by searching for
+policies set Π. In the multi-objective MEC scheduling prob-
+lem, as a Pareto front approximation PF(Π), the hypervolume
+metric is
+V(PF(Π)) =
+R
+R2 1Vh(P F (Π))(z)dz,
+(16)
+where Vh(PF(Π)) = {z ∈Z|∃π ∈PF(Π) : yπ ≻P
+z ≻P yref}, and yref ∈R2 is a reference performance point.
+Function 1Vh(P F (Π)) is an indicator function that returns 1 if
+z ∈Vh(PF(Π)′) and 0 otherwise.
+The multi-objective resource scheduling problem is still a
+challenge for MEC networks for the following reasons:
+• The natural MEC network environments are full of dy-
+namics and uncertainty (e.g. the size of the next arriving
+task), leading to unknown preferences of MEC systems.
+• The objective function (12) and the feasible set of con-
+straints (12b) and (12c) are non-convex as a result of
+binary variables x. Although it is possible to transform
+them into convex problems, the computational complexity
+of convex optimization is demanding since the goal is to
+get a vector reward instead of a reward value.
+• Designing an offloading scheme for various MEC systems
+with different CPU frequencies and numbers of servers
+is difficult, due to the system optimization equations and
+the value space of decision variables have changed.
+The aforementioned problems motivate us to design a
+GMORL-based scheme to solve (12) and improve the gen-
+eralization.
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+5
+III. GMORL SCHEDULING METHOD
+This section considers the situation of multiple preferences,
+CPU frequencies, and server quantities. We consider that
+a (central) agent makes all offloading decisions in a fully
+observable setting. We model the MEC environment as a novel
+MDP framework named contextual MOMDP (multi-objective
+Markov decision process).
+A. The Contextual MOMDP Framework
+The traditional MDP framework considers only a single
+objective, while the MOMDP framework extends it to multiple
+objectives. Additionally, in MDPs, the contextual character-
+istics of the environment directly influence the transition
+process. However, the traditional MDP framework lacks a def-
+inition of contextual characteristics for environments, leading
+to algorithms being unable to formulate the optimal policy
+based on the specific environment. Contextual MDP, which
+considers this definition, has been extensively employed in
+research on the generalization of DRL algorithms [17].
+Thus, to address the challenges of unknown user preferences
+and system heterogeneity, we first propose the contextual
+MOMDP framework for unknown preferences and system
+heterogeneity to formulate our problem (12) as a standard form
+of DRL.
+Definition
+1
+(Contextual
+MOMDP):
+The
+contextual
+MOMDP is a tuple ⟨S × C, A, T , γ, µ, R⟩, where the un-
+derlying state is s′ ∈S, context is c ∈C, context space
+is C, and state space is S × C. It also includes action
+space A, probabilistic transition process T : S × A →S, dis-
+count factor γ ∈[0, 1), probability distribution over initial
+states µ : S →[0, 1], and a vector-valued reward function
+R : S × A →R2 that specifies the immediate reward for the
+delay objective and the energy consumption objective.
+In contextual MOMDP, the reward function returns a vector
+reward instead of a scalar. Context space is used to describe
+variations across different environment parameters, and a
+context corresponds to a specific environment (MEC system)
+and remains constant within an episode. The training context
+space is a subset of the full context space. An agent learns
+from environments within the training context space. The
+evaluation performance gap between training context space
+and full context space measures the generalization ability of
+an agent.
+For one episode, the contextual MOMDP samples a context
+c in context space C to construct an environment. The context
+c determines the transition T and reward function R of the
+environment. For a decision step t, an agent offloads task
+m from user u. It has m = t for task index m and step-
+index t. We specify the contextual MOMDP framework in the
+following:
+Context C: A context c = (ω, E, f E) contains a preference
+vector ω, the number of edge server E, the CPU frequencies
+of all servers f E = (f0, f1, f2, . . . , fE). The composition of
+the context space C is
+C = Ω× CE × Cf E,
+(17)
+where Ω= {ω1, ω2, ..., ωn} is the preference set. The range
+of edge server quantity is CE = {1, 2, . . . , Emax}. The range
+of CPU frequency for all servers is Cf E = {Cf0, Cf E′}, where
+Cf0 is the range CPU frequency for a cloud server and Cf E′
+is the range of CPU frequency for all edge servers. We have
+Cf0 = [f min
+0
+, f max
+0
+] and Cf E′ = [f min
+E′ , f max
+E′
+]. For an MEC
+system with context c ∈C, it follows that ω ∈Cω, E ∈CE,
+and fe ∈Cf E for any e ∈E.
+State S: We employ a well-designed approach to encode
+the system state. We consider Emax + 1 servers (Emax edge
+servers and a cloud server). Hence, the state st ∈S ×C at step
+t is a fixed length set and contains Emax+1 server information
+vectors and a preference vector ω. We formulate state st as
+st = {st,e|e ∈E} ∪{st,e|e /∈E ∧e ∈CE} ∪{ω}. The
+information vector of server e at step t is
+st,e = (Lm, Cu,e, fe, nexe
+e
+(τt), E, Be),
+∀e ∈E.
+(18)
+State st,e contains task size Lm, data rate Cu,e, CPU frequency
+fe, the number of execution task nexe
+e
+(τt), the number of edge
+server E, and task histogram vector Be, which is the residual
+size distribution for tasks executed in server e at time instant
+τt. We employ the histogram vector Be to represent the current
+state of the dynamic workload on the servers. That is,
+Be(τt) = (bexe
+1,e (τt), bexe
+2,e (τt), ..., bexe
+N,e(τt)).
+(19)
+We denote one of previous tasks as m′ and denote the
+execution residual size of task m′ at time instant τt as Lres
+m′(τt).
+In Eq. (19), the i-th entry bexe
+i,e (τt) in Be denotes the number
+of tasks with execution residual size Lres
+m′(τt) within the range
+of [i −1, i) Mbits. In order to tally all tasks, the last element
+bexe
+N,e(τt) denotes the number of tasks with execution residual
+size Lres
+m′(τt) within the range of [N −1, +∞) Mbits. The
+execution residual size Lres
+m′(τt) of task m′ at time instant τt
+is given by
+Lres
+m′(τt) = Lm′ −min (gm′ (τt −m′∆t) , Lm′) ,
+∀τt ∈[t∆t, T∆t], m′ ∈{1, 2, . . . , m −1}.
+(20)
+The total number of servers E varies across different
+contexts, but we assume that E does not exceed Emax. For
+a dummy edge server e, which satisfies e /∈E and e ∈CE
+(or expressed as e > E and e ≤Emax), the vector st,e is a
+padding vector that every element is equal to −1.
+Action A: The action at ∈A denotes that offloading task
+m to which server. The action space is A = {0, 1, 2, . . . , E}.
+Hence, the action at step t is represented by the following
+at =
+X
+e∈E
+exm,e(t).
+(21)
+Transition T : It describes the transition from st to st+1
+with action at, which is denoted by P(st+1|st, at).
+Reward R: Unlike a classical MDP setting in which
+each reward is a scalar, a multi-objective setting requires
+a vector. Therefore, our reward (profile) function is given
+by R : S × C × A →R2. We denote the reward of energy
+consumption and delay as rE and rT. Since the server CPU
+frequency fε affects the execution delay T exe
+m , the calculation
+of rT and rE depends on the system parameters E and fε in
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+6
+the current context c. If the agent offloads task m to server e
+at step t, the reward of energy consumption given state st and
+action at is
+rE(st, at) = −ˆEm,
+(22)
+where ˆEm is the estimated energy consumption of task m,
+which can be obtained in Eq. (11). For one episode, the total
+reward for energy consumption is given by
+RE =
+T
+X
+t=1
+rE(st, at) = −
+X
+m∈M
+ˆEm.
+(23)
+The reward for delay is
+rT(st, at) = −
+
+ˆTm +
+X
+m′∈Me(τt)
+∆ˆT at
+m′
+
+,
+(24)
+where ˆTm is the estimated delay for task m, and Me(τt) is a
+set of tasks, which are executed in server e at time instant τt.
+The estimated correction of delay ∆ˆT at
+m′ describes how much
+delay will increase to task m′ with action at. For one episode,
+the total reward of delay has
+RT =
+T
+X
+t=1
+rT(st, at) = −
+X
+m∈M
+Tm.
+(25)
+To compute reward rT , we rewrite Eq.(24) as
+rT(st, at) = −ˆTm −
+X
+m′∈Me(τt)
+( ˆT at
+m′ −ˆT a∗(t)
+m′
+),
+(26)
+where ˆT at
+m′ denotes the estimated residual delay of task m′
+with taking action at at step t. The residual delay of task
+m′ before taking action at is ˆT a∗(t)
+m′
+, which is the estimated
+residual delay at the end of step t −1. Next, we introduce the
+computation of the two cases.
+(1) The no-offloading case: For task set Me(τt) with
+nexe
+e
+(τt) tasks, the execution residual size is a set Lres
+Me(τt) =
+{Lres
+m′(τt)|m′ ∈Me(τt)}. We sort residual task size set
+Lres
+Me(τt) in the ascending order and get a vector Lsort
+Me(τt) =
+(Lsort
+1,e (τt), Lsort
+2,e (τt), ..., Lsort
+nexe
+e
+(τt),e(τt)), where Lsort
+i,e (τt) is the
+i-th least residual task size in Lres
+Me(τt). Specifically, we define
+Lsort
+0,e (τt) = 0. Then, we have
+X
+m′∈Me(τt)
+ˆT a∗(t)
+m′
+=
+nexe
+e
+(τt)
+X
+i=1
+(nexe
+e
+(τt)−i+ 1) ˆT dur
+i,e
+=
+nexe
+e
+(τt)
+X
+i=1
+(nexe
+e
+(τt) −i + 1)(Lsort
+i,e (τt) −Lsort
+i−1,e(t))
+qe(τt + (i −1)∆t)
+=
+nexe
+e
+(τt)
+X
+i=1
+η
+fe
+(nexe
+e
+(τt) −i+ 1)2(Lsort
+i,e (τt) −Lsort
+i−1,e(t)),
+(27)
+where ˆT dur
+i,e
+denotes the estimated during of time from the
+completing instant of residual task Lsort
+i−1,e(τt) to the complet-
+ing instant of residual task Lsort
+i,e (τt).
+(2) The case with taking action at: The MEC system
+completes offloading task m at time instant τ ′
+t = τt+T off
+m . We
+consider a high-speed communication system that offloading
+delay T off
+m
+is shorter than the duration of one step ∆t and
+satisfies T off
+m < ∆t. For task set Me(τ ′
+t) with nexe
+e
+(τ ′
+t) tasks,
+the execution residual size is a set Lres
+Me(τ ′
+t) = {Lres
+m (τ ′
+t)|m ∈
+Me(τ ′
+t)}. We sort set Lres
+Me(τ ′
+t) in the ascending order and get
+a vector Lsort
+Me(τ ′
+t) = (Lsort
+1,e (τ ′
+t), Lsort
+2,e (τ ′
+t), ..., Lsort
+nexe
+e
+(τ ′
+t),e(τ ′
+t)),
+where Lsort
+i,e (τ ′
+t) is the i-th least residual task size in Lres
+Me(τ ′
+t).
+Then, it satisfies
+ˆTm +
+X
+m′∈Me(τ ′
+t)
+ˆT at
+m′
+=
+nexe
+e
+(τt)
+X
+i=1
+(nexe
+e −i+1)min
+
+ˆT dur
+i,e , max
+
+ˆT off
+m −
+i−1
+X
+j=1
+ˆT dur
+j,e , 0
+
+
+
+
++
+nexe
+e
+(τ ′
+t)
+X
+i=1
+η
+fe
+(nexe
+e
+(τ ′
+t)−i+1)2(Lsort
+i,e (τ ′
+t)−Lsort
+i−1,e(τ ′
+t)) + ˆT off
+m ,
+(28)
+where ˆT off
+m is the estimated offloading delay for task m given
+in Eq. (5). In the right-hand-side of Eq. (28), the first term
+estimates the sum of delay for tasks Me(τt) from time instant
+τt to τ ′
+t. The second term estimates the sum of delay for
+tasks Me(τ ′
+t) from time instant τ ′
+t to infinity. The expression
+η
+fe (Lsort
+i,e (τ ′
+t)−Lsort
+i−1,e(τ ′
+t)) in Eq. (28) represents the required
+time from completing residual size Lsort
+i−1,e(τ ′
+t) to completing
+residual size Lsort
+i,e (τ ′
+t). We set Lsort
+0,e (τ ′
+t) = 0.
+To summarize, if the agent offloads task m to server e at
+step t, the reward of delay is
+rT(st, at) = −ˆT off
+m +
+nexe
+e
+(τt)
+X
+i=1
+(nexe
+e
+(τt) −i + 1) ˆT dur
+i,e
+−
+nexe
+e
+(τt)
+X
+i=1
+(nexe
+e
+−i+ 1)min
+
+ˆT dur
+i,e , max
+
+ˆT off
+m −
+i−1
+X
+j=1
+ˆT dur
+j,e , 0
+
+
+
+
+−
+nexe
+e
+(τ ′
+t)
+X
+i=1
+η
+fe
+(nexe
+e
+(τ ′
+t) −i + 1)2(Lsort
+i,e (τ ′
+t) −Lsort
+i−1,e(τ ′
+t)).
+(29)
+To achieve the GMORL algorithm, we compute a scalarized
+reward given preference ω:
+rω(st, at) = ωT × (αTrT(st, at), αErE(st, at)),
+(30)
+where αT and αE are coefficients for adjusting delay rT(t)
+and energy consumption rE(t) to the same order of magnitude.
+The total reward is
+Rω =
+T
+X
+t=1
+rω(st, at).
+(31)
+B. Generalizable Neural Network Architecture
+In the following, we first present the neural network archi-
+tecture. When applying DRL-based methods to schedule tasks
+for multi-edge systems, the generalization problem arises. That
+is, the output of a neural network has a fixed length, but the
+number of edge server E ∈CE are not the same in different
+MEC systems, which means that the trained neural network
+is not directly applicable to new environments. To tackle this
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+7
+challenge, we introduce a novel neural network architecture
+for the GMORL algorithm to accomplish generalization. The
+neural network architecture is shown in Fig. 1. The neural net-
+work takes the state information of each server and the context
+as input, processes the features of each server individually
+through convolutional modules, then aggregates all features
+through MLP modules, and finally, for the actor network,
+outputs the selection probabilities for each server, and for the
+critic network, outputs the values of each server.
+Input 1
+State s't  :
+Feature Fs't  :
+Concatenated
+feature F's't  :
+st,1
+st,2
+st,E
+...
+st,0
+Convolution layers
+Ft,1
+Ft,2
+Ft,E
+...
+Ft,0
+Ft,1
+Ft,2 ...
+Ft,Emax
+Ft,0
+Policy
+Q-function
+...
+...
+ω
+MLP block 2
+Input 2
+State s''t  :
+(Preference)
+MLP block 3
+F''s't
+Fs''t
+st,Emax
+Ft,Emax
+π'φ(·|st) 
+Ft,E ...
+Mask
+Fst
+Q′θ (st ,·)
+Mask
+Softmax
+π''φ(·|st) 
+Pre-output
+Output
+Element-wise add
+πφ(·|st) 
+Qθ (st ,·)
+MLP block 1
+Fig. 1. The neural network architecture of the scheduling policy.
+To resolve the inherent conflict between dekay and en-
+ergy consumption, we employ the Discrete-SAC algorithm
+to optimize a scalarized reward. For the Discrete-SAC-based
+algorithm, the neural networks contain a policy network with
+parameters ϕ, two local Q-function networks with parameters
+θ1 and θ2, respectively, and two target Q-function networks
+with parameters ¯θ1 and ¯θ2, respectively. The policy network
+and the Q-function network share a similar structure. For the
+policy network, the pre-output is probability vector π′
+ϕ(·|st)
+without normalization. For a Q-function network, the output
+is an estimated Q-value vector Q′
+θ(st, ·).
+The neural network receives state st as input, and it can
+work for the environments with any server quantity E ∈
+CE. We split the input state st into two parts which have
+s′
+t = {st,e|e ∈E} ∪{st,e|e /∈E ∧e ∈CE} and s′′
+t = ω.
+After receiving input, the neural network processes it through
+convolution layers and MLP layers to generate a preliminary
+pre-output.
+Different contexts may have different numbers of edge
+servers E. However, the dimensions of π′
+ϕ(·|st) and Q′
+θ(st, ·)
+are fixed. To design a neural network suitable for any number
+of edge server E ∈CE, we expand the action space from A =
+E = {0, 1, 2, . . . , E} to A′ = E = {0, 1, 2, . . . , E, . . . , Emax}.
+Thus, the length of pre-outputs π′
+ϕ(·|st) and Q′
+θ(st, ·) are
+expanded to Emax + 1. Next, we introduce a masked operator
+which satisfies
+mask(π′
+ϕ(at|st)) =
+(
+π′
+ϕ(at|st) , if at ∈A
+−∞
+, if at /∈A and at ∈A′
+,
+(32)
+This operator masks the actions of dummy edge servers,
+making their selection probability zero. We apply the mask
+operator to each element of vector π′
+ϕ(·|st) to get a new vector
+π′′
+ϕ(·|st) that satisfies π′′
+ϕ(at|st)
+=
+mask(π′
+ϕ(at|st)) for
+∀at ∈A′. Then, we use the softmax regression to normalize
+vector π′′
+ϕ(·|st) and get the probability vector πϕ(·|st), via the
+following softmax expression:
+πϕ(at|st) = softmax(π′′
+ϕ(at|st))
+=
+exp(π′′
+ϕ(at|st))
+P
+a′
+t∈A′ exp(π′′
+ϕ(a′
+t|st)),
+∀at ∈A′,
+(33)
+Finally, we apply the mask operator to each element of vector
+Q′
+θ(st, ·) to get Q-value vector Qθ(st, ·). Through this way,
+the probability πϕ(aout
+t
+|st) of action aout
+t
+which outside action
+space A is set to 0, and Q-value Q′
+θ(aout
+t
+, st) is set to ψ. It
+constrains an agent to take action and learn policy in effective
+action space A. Furthermore, it enables a policy π to schedule
+for any multi-edge system with E ∈CE.
+C. Policy Update for the GMORL Model
+The policy update for the GMORL model with the Discrete-
+SAC, which is a family of policy gradient methods [28]. We
+employ the updating method proposed in [29]. The Discrete-
+SAC algorithm aims to simultaneously maximize the expected
+reward and entropy to achieve a stochastic policy, and it
+improves the sample efficiency and robustness of traditional
+policy gradient methods. The optimal Discrete-SAC policy
+with maximum entropy objective is
+π∗= arg max
+π
+T
+X
+t
+E(st,at)∼ρπ[γt(rω(st, at) + αHH(π(·|st)))],
+(34)
+where ρπ denotes the trajectory distribution of policy π, and
+αH is a temperature parameter that determines the importance
+of the entropy term. The action probability vector of policy
+π at state st is π(·|st). The entropy of π(·|st) is H(π(·|st)),
+and it satisfies H(π(·|st)) = −log π(·|st).
+In the policy evaluation step, we can obtain the soft Q-value
+function by starting from any function Q : S × A →R2 and
+repeatedly applying the modified Bellman backup operator T π
+which satisfies
+T πQ(st, at)=r(st, at)+ γEst+1∼ρπ(V (st+1)),
+(35)
+where V (·) is a soft state-value function of policy π, and it
+satisfies
+V (st) = Eat∼π[Q(st, at) −αH log(π(at|st))].
+(36)
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+8
+JQ(θi) = E(st,at)∼D
+1
+2
+ Qθi (st, at) −
+ r (st, at) + γEst+1∼T
+
+V ¯
+θi (st+1)
+2
+
+, ∀i ∈{1, 2}
+(37)
+Jπ(ϕ) = Est∼D
+h
+πt (·, st)T [αH log (πϕ (·, st)) −min(Qθ1(st, ·), Qθ2(st, ·))]
+i
+(41)
+Then we train soft Q-function parameters θi for i ∈{1, 2}
+to minimize the soft Bellman residual. Soft Bellman residual
+JQ(θi) is given by Eq. (37), where D is a replay buffer of past
+experiences, and Qθi(·) is the soft Q-function with parameters
+θi. Soft state-value V¯θi(st+1) is estimated by a target Q-
+function network according to Eq. (36). Based on JQ(θi), we
+update local soft Q-function parameters θi by
+θi ←θi −λQ ˆ∇θiJQ(θi),
+(38)
+where λQ is the learning rate of soft Q-function, and
+ˆ∇θiJQ(θi) is the approximated gradient of JQ(θi). Next, we
+update target soft Q-function parameters ¯θi by
+¯θi ←βθi + (1 −β)¯θi,
+(39)
+where β is a target smoothing coefficient. In the policy
+improvement step, we update policy π according to
+πnew = arg min
+π∈Π′DKL
+
+π (· | st)
+wwwww
+exp
+
+1
+αH Qπold (st, ·)
+
+Zπold (st)
+
+
+(40)
+where DKL(·) is the Kullback-Leibler (KL)-divergence func-
+tion, and Π′ is a policy search space that is applied to restrict
+the policy. The partition function Zπold(·) normalizes the
+policy distribution, ensuring that it sums up to a probability of
+1 over the entire action space. We optimize policy parameters
+ϕ to minimize the KL-divergence by the policy objective
+Jπ(ϕ) which is given by Eq. (41), where Qθ1(·, st) and
+Qθ2(·, st) are the Q-value vectors for all actions at state st,
+with parameters θ1 and θ2.
+We denote the policy gradient direction for the reward of
+delay rT as ˆ∇ϕJπ,T(ϕ), and denote the policy gradient direc-
+tion for the reward of energy consumption rE as ˆ∇ϕJπ,E(ϕ).
+The policy gradient direction for reward rω is
+ˆ∇ϕJπ,ω(ϕ) = ωT × ( ˆ∇ϕJπ,T(ϕ), ˆ∇ϕJπ,E(ϕ)).
+(42)
+Given the gradient directions of the delay objective and the
+energy consumption objective, a policy can reach the Pareto
+front by following a direction in ascent simplex [30]. An
+ascent simplex is defined by the convex combination of
+single–objective gradients.
+Synthesizing the above, we update policy parameters ϕ by
+ϕ ←ϕ −λπ ˆ∇ϕJπ(ϕ),
+(43)
+where λϕ is the learning rate of policy parameters ϕ, and
+ˆ∇ϕJπ(ϕ) is the approximated gradient of Jπ(ϕ).
+Algorithm 1 The GMORL Scheduling Algorithm
+1: Initialize replay buffer D, policy network parameters ϕ,
+the parameters of two local Q-function networks θ1 and
+θ2, the parameters of two target Q-function networks ¯θ1
+and ¯θ2.
+2: Given training context space C and set preference context
+space Ωfrom Eq. (32).
+3: for each epoch : iep ←1, . . . , Nep do
+4:
+for each environment: ienv ←1, . . . , Ng do
+5:
+ω ←ωienv
+6:
+E ∼CE
+7:
+f0 ∼Cf0
+8:
+for each edge server: e′ ←1, . . . , E do
+9:
+fe′ ∼Cf E′
+10:
+end for
+11:
+for each step: t ←1, . . . , T do
+12:
+at ∼πϕ(·|st)
+13:
+st+1 ∼T (st+1|st, at)
+14:
+D←D ∪{⟨st, at, rω(st, at), st+1⟩}
+15:
+end for
+16:
+for each update round: iup ←1, . . . , Nup do
+17:
+Sample experiences from D
+18:
+Compute JQ(θi) for i ∈{1, 2}, Jπ(ϕ), and
+J(αH) by Eq. (37), Eq. (41), and Eq. (44).
+19:
+Update the parameters according to Eq. (38), Eq.
+(39), Eq. (43) and Eq. (45):
+20:
+θi ←θi −λQ ˆ∇θiJQ(θi) for i ∈{1, 2}
+21:
+ϕ ←ϕ −λπ ˆ∇ϕJπ(ϕ)
+22:
+αH ←αH −λα ˆ∇αHJ(αH)
+23:
+¯θi ←βθi + (1 −β)¯θi for i ∈{1, 2}
+24:
+end for
+25:
+end for
+26: end for
+27: Output policy πϕ
+Finally, the temperature parameter αH is learnable. The
+temperature objective is
+J(αH) = πt (st)T 
+−αH
+ log
+ πϕ(st)
+
++ ¯H
+
+,
+(44)
+where ¯H is a constant vector equal to the hyperparameter
+representing the target entropy. We update αH by
+αH ←αH −λα ˆ∇αHJ(αH),
+(45)
+where λα is the learning rate of temperature parameter αH,
+and ˆ∇αHJ(αH) is the approximated gradient of J(αH). We
+present the proposed GMORL in Algorithm 1.
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+9
+IV. PERFORMANCE ANALYSIS
+A. Generalization Performance
+We propose a training approach to enable the generalization
+for GMORL. A generalization policy learns in training context
+space and strives to generalize to the entire context space C.
+It aims at achieving optimal offloading scheduling for any
+context c ∈C. Context space C represents the range of
+generalization. We use the domain randomization approach,
+which creates various MEC environments with randomized
+properties to train a policy.
+When the gradient directions of the two objectives are
+not completely opposite, the ascent simplex exists. If the
+gradient direction lies within the scent simplex, both objectives
+can be optimized simultaneously, and the gradient descent
+algorithm can reach a Pareto local optimum. We sample Ng
+contexts to generate Ng MEC environments for one epoch.
+We define a preference set with Ng preferences as ΩNg =
+{ω1, ω2, . . . , ωNg}, where the i-th preference is
+ωi =
+ i −1
+Ng −1, 1 −
+i −1
+Ng −1
+
+.
+(46)
+The training preference context space is ΩNg, and it has
+equally spaced intervals, each having a length of
+1
+Ng−1. We
+sequentially apply the Ng preferences to the corresponding
+Ng environments. We randomly sample the number of edge
+server E, the CPU frequency of cloud server f0 and the CPU
+frequency of edge servers f E′ in training context space for
+each MEC environment.
+B. Convergence Performance
+We prove the convergence properties of GMORL:
+Theorem 1 (Convergence of GMORL Scheduling Algo-
+rithm): Given a sufficiently diverse action-state space, the
+GMORL scheduling algorithm converges to the optimal policy
+π∗and Q-function Q∗as the number of epochs Nep and update
+rounds Nup approach infinity.
+Theorem 1 guarantees that the GMORL algorithm can
+find the optimal scheduling policy with sufficient training
+iterations. The proof of Theorem 1 is in Appendix E.1.
+The structure of the GMORL algorithm is illustrated in
+Appendix F.
+Denote the training rounds as Nep, the number of sampled
+environments in each round as Ng, the time steps contained
+in each environment as T, the update rounds as Nup, the
+number of edge servers as E and the number of neural network
+parameters as Nnet. Regarding the complexity of the GMORL
+algorithm, we can obtain it from the following corollary:
+Corollary 1 (Complexity of GMORL): In the Nep training
+session, the computational complexity of GMORL algorithm
+is O(Nep(Ng(E + T) + NupNnet)).
+The proof of Corollary 1 has shown in Appendix D.2.
+C. Performance Difference Bound
+Our goal is to minimize the objective function, defined in
+Eq. (12) as
+J(π) = min
+π Ex∼π
+" X
+m∈M
+γm(ωTTm + ωEEm)
+#
+.
+(47)
+Fig. 2.
+Pareto fronts of the proposed GMORL algorithm and benchmark
+algorithms.
+Consequently, we anticipate that J(πt) > J(πt+1), indicating
+an improvement in policy from πt to πt+1. To substantiate the
+theoretical guarantees of our GMORL algorithm, we derive a
+lower bound for the performance difference between adjacent
+policies.
+Theorem 2 (Performance Difference Bound of GMORL):
+For any two adjacent policies πt and πt+1 in the policy space
+of GMORL, their performance difference ∆J = J(πt) −
+J(πt+1) is lower bounded by:
+∆J ≥A∥πt −πt+1∥1,
+(48)
+where
+A
+=
+min{Φmin, minm{γmωT }},
+Φmin
+=
+minm,e{γmωEΦm,e}, and Φm,e = poff Lm
+Cu,e + κηf 2
+e Lm.
+Theorem 2 ensures a lower bound on the performance
+improvement for each policy update in the GMORL algorithm,
+guaranteeing the stability of the model. The proof of Theorem
+2 is in Appendix D.3.
+V. EXPERIMENTAL RESULTS
+In this section, we evaluate the performances of the
+GMORL scheduling scheme and compare it with benchmarks.
+First, we introduce the simulation setup and evaluation metrics.
+Then, we specifically investigate convergence, multi-objective
+performances, and generalization. Finally, we analyze the
+Pareto fronts and compare them with the benchmarks.
+A. Simulation Setup
+In the training stage, we set Ng = 64. The context space
+of edge server quantity is CE = {1, 2, . . . , 8}. The context
+space of cloud server CPU frequency is Cf0 = [3.5, 4.5]
+GHz. The context space of edge server CPU frequency is
+Cf E′ = [1.75, 2.25] GHz. In the testing stage, we set Ng = 101
+(corresponding to an increment of 0.01). The context space
+of edge server quantity is CE = {1, 2, . . . , 10}. The context
+space of cloud server CPU frequency is Cf0 = [3.0, 5.0]
+GHz. The context space of edge server CPU frequency is
+Cf E′ = [1.5, 2.5] GHz. The testing context space has a larger
+scope than the training context space. We provide the detailed
+simulation setup of our model parameters in Table II. In the
+Appendix, we present the context space settings in Table A1.
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+10
+TABLE II
+MODEL PARAMETERS
+Resource Scheduling Hyperparameters
+Values
+The number of steps for one episode T
+100
+Step duration ∆t
+1 s
+The number of users U
+10
+The number of tasks M
+100
+System bandwidth W
+16.6MHz [31]
+Offloading power poff
+10 mW
+The number of CPU cycles η for one-bit
+task
+103
+Effective capacitance coefficient κ
+5 × 10−31
+Poisson arrival rate λp for each user
+0.1
+DRL Hyperparameters
+Values
+The number of epochs for training Nep
+4000
+The number of environments for one epoch
+Ng
+64
+Update round Nup
+10
+Replay memory
+1 × 105
+Batch size
+4096
+SAC temperature parameter αH
+0.05
+The learning rate of policy λπ
+1 × 10−6
+The learning rate of soft Q-function λQ
+1 × 10−6
+The learning rate of temperature λαH
+0
+Discount factor γ
+0.95
+B. Performance Comparison
+1) Baseline Algorithms: We evaluate the performance of
+the proposed GMORL algorithms with a single policy and
+compare it with a linear upper confidence bound (LinUCB)-
+based scheme [32], a multi-policy MORL scheme [24], a
+simulated annealing (SA)-based scheme, and a random-based
+scheme. LinUCB algorithms belong to contextual multi-arm
+bandit (MAB) algorithms, widely used in task offloading
+problems [33], [34]. Some work [4], [34], [35] apply heuristic
+methods to schedule for offloading. The non-dominated sorting
+genetic algorithm (NSGA-II) [36], [37], and Pareto Q-learning
+[38] are well-known multi-objective solution approaches. Fur-
+thermore, we compare our algorithm with a multi-policy
+MORL approach [39] based on the standard Discrete-SAC
+algorithm. We provide a detailed introduction to the baseline
+algorithms in the Appendix.
+We evaluate these schemes with the number of edge servers
+E = 6. Notably, in the multi-policy MORL scheme, we
+build 101 Discrete-SAC policy models for the 101 preference
+in Ω101 correspondingly. We train each policy model with
+f0 = 4 GHz and fe′ = 2 GHz. This method has no gen-
+eralization ability. A well-trained policy model is applicable
+to a specific context. However, benefiting from focusing on a
+specific context, this method is more likely to achieve optimal
+performance. We apply the method to determine the upper
+bound of the Pareto front.
+Then we show the simulation results. Fig. 2 illustrates the
+Pareto fronts of these schemes. The Pareto front of the multi-
+policy MORL scheme shows an approximate upper bound
+of the performance. The result indicates that the proposed
+GMORL scheme dominates the LinUCB-based, SA-based,
+random-based schemes, NSGA-II, and Pareto Q-learning. Our
+method can approach the upper bound. We select the maxi-
+mum delay and energy consumption across all Pareto fronts
+20
+40
+60
+Task delay (Minute)
+3.00
+4.00
+5.00
+6.00
+Energy consumption (Joule)
+4 edges
+5 edges
+6 edges
+7 edges
+8 edges
+(a) Pareto fronts of total delay and
+energy consumption
+1
+2
+3
+Task delay (Minute/Mbits)
+0.20
+0.25
+0.30
+0.35
+Energy consumption (J/Mbits)
+4 edges
+5 edges
+6 edges
+7 edges
+8 edges
+(b) Pareto fronts of total delay and
+energy consumption per Mbits task
+Fig. 3. Pareto fronts of the proposed GMORL algorithm.
+as the reference point to compute the hypervolumes. The
+Pareto front hypervolume of the proposed GMORL scheme
+is 64.1, the LinUCB-based scheme is 57.9, the multi-policy
+MORL scheme is 64.3, the SA-based scheme is 30.2, and the
+random-based is 29.0. The results show that the Pareto front
+hypervolume of the proposed GMORL scheme outperforms
+the LinUCB-based scheme by 64.1-57.9
+57.9
+= 10.7%, outperforms
+the SA-based scheme by
+64.1-30.2
+30.2
+= 112.3%, and outper-
+forms the random-based scheme by 64.1-29.0
+29.0
+= 121.0%. The
+Pareto front hypervolume of the proposed GMORL scheme is
+64.3-64.1
+64.3
+= 0.3% lower than but close to the approximate upper
+bound.
+C. Performance Analysis
+1) State description in no-uninstall scenario: Multi-Edge:
+To evaluate the performance of the proposed GMORL algo-
+rithm in scenarios with different server quantities, we tested its
+Pareto front. In Fig. 3, each point corresponds to a preference.
+In these scenarios, the context space of cloud server CPU
+frequency is Cf0 = [3.5, 4.5] GHz, the context space of edge
+server CPU frequency is Cf E′ = [1.75, 2.25] GHz. The mean
+of task size, represented by ¯L, is determined by Eq. (1) to
+balance the supply and demand of computational capability.
+The performances are computed per 1 Mbits task in Fig. 3b for
+a fair comparison. As the number of edge servers increases,
+the Pareto front of a more edge servers case can dominate
+the less one. The result shows that though more edge servers
+match more task demands, deploying more edge servers can
+significantly improve delay and energy consumption per Mbits
+tasks for each preference.
+Multi-Preference: We conducted specific tests for delay
+and energy consumption.
+Fig. 4a illustrates total delay performances per Mbits task
+with different preferences of delay ωT. Fig. 4b illustrates
+total energy consumption performances per Mbits task with
+different preferences of energy consumption ωE. These simu-
+lation results validate that the proposed GMORL algorithm can
+achieve trade-offs between delay and energy consumption by
+tuning a preference ω. Furthermore, we observe that the more
+edge servers in an MEC system, the less delay and energy
+consumption per Mbits task the system performs. This further
+corroborates the conclusion drawn in the preceding paragraph.
+2) Generalization analysis: In this subsection, we evaluate
+the generalization of the proposed GMORL scheme from the
+number of edge servers E, cloud server CPU frequency f0, and
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+11
+0.00
+0.25
+0.50
+0.75
+1.00
+Preference of delay
+1.00
+2.00
+3.00
+4.00
+Task delay (Minute/Mbits)
+4 edges
+5 edges
+6 edges
+7 edges
+8 edges
+(a) Total delay per Mbits task
+0.00
+0.25
+0.50
+0.75
+1.00
+Preference of energy consumption
+0.20
+0.25
+0.30
+0.35
+Energy consumption (J/Mbits)
+4 edges
+5 edges
+6 edges
+7 edges
+8 edges
+(b) Total energy consumption per
+Mbits task
+Fig. 4. Total task delay and energy consumption with different preferences.
+20
+30
+40
+50
+Task delay (Minute)
+3
+4
+5
+Energy consumption (Joule)
+GMORL policy
+Reference policy
+Fig. 5. Pareto fronts of GMORL policy and reference policy when E = 6,
+Cf0 = [3.0, 5.0] GHz and CfE′ = [1.5, 2.5] GHz.
+edge server CPU frequency fe′. To evaluate the generalization
+of the proposed algorithm, we consider a reference policy
+where the training context space is equivalent to the testing
+context space. The reference policy serves as an upper bound
+for performance against which we compare the GMORL pol-
+icy. Smaller discrepancies between the two indicate superior
+generalization of the GMORL policy.
+• Reference policy: The same method as GMORL scheme,
+however, we define it as Reference policy due to it trained
+in a larger context space with Ω64, CE = {1, 2, . . . , 10},
+Cf0 = [3.0, 5.0] GHz and Cf E′ = [1.5, 2.5] GHz, where
+CE, Cf0 and Cf E′ are consistent with the testing context
+space.
+Generalization of CPU frequencies :
+First, we study the CPU frequency generalization of the
+proposed GMORL scheme. Fig. 5 illustrates the Pareto fronts
+of the GMORL policy and reference policy with edge server
+quantity E = 6. For the GMORL policy, the CPU frequency
+context space during training has a smaller range ([1.75, 2.25]
+GHz) than during testing ([2.00, 2.50] GHz). For the reference
+policy, the CPU frequency context space during training is
+consistent with during testing. We use the Pareto front of
+reference policy as a reference for comparison. The hyper-
+volume of reference policy is 81.69, and the hypervolume of
+the GMORL policy is 80.29, the hypervolume error between
+the two policies is 81.69-80.29
+80.29
+= 1.7%.
+Next, we evaluate the total delay and energy consumption
+performances with different CPU frequencies. Fig. 6a and fig.
+6b illustrate the total task delay of the GMORL policy and the
+reference policy with edge server quantity E = 6, the mean
+of task size ¯L = 16 Mbits, and preference ω = (1, 0). This
+group of numerical results indicates that with the increase of
+f0 or fe′, the delay changing trend of the GMORL policy and
+the reference policy is basically consistent. It is the same for
+regions outside the training context space of GMORL policy.
+Fig. 6c and fig. 6d illustrates the total energy consumption
+of GMORL policy and reference policy with the number of
+edge server E = 6, the mean of task size ¯L = 16 Mbits, and
+preference ω = (0, 1). The simulation results show that with
+the increase of f0 or fe′, the energy consumption changing
+trend of the GMORL and the reference policies are highly
+consistent. It is the same for the regions that are outside the
+training context space of the GMORL policy. These results
+also show that the proposed GMORL scheme has a certain
+generalization ability to achieve superior performance in the
+CPU frequencies outside the training context space.
+Generalization of server quantities : We compute
+the Pareto front of the GMORL policy and reference policy
+with the number of edge servers E = 9, which are outside the
+GMORL policy’s training context space. Fig. 7 illustrates the
+Pareto fronts. The result shows that though there is a certain
+gap between the two Pareto fronts, they present a moderate
+level of concordance in value.
+These simulation results show that the proposed GMORL
+scheme has a strong generalization capability to schedule
+tasks for the MEC systems with CPU frequencies or the
+number of edge servers outside the training context space.
+As demonstrated in Fig. 3a, the proposed GMORL scheme
+exhibits generalization in scheduling MEC systems with vary-
+ing quantities of edge servers within the training context space.
+When scheduling for the MEC systems with a number of edge
+servers outside the training context space, the performance of
+the proposed GMORL scheme has a certain gap compared to a
+well-trained one. However, when designing a policy model, the
+neural network architecture determines the maximum number
+of edge servers Emax′ that the policy can schedule. Generally,
+it satisfies Emax′ = Emax, where Emax is the maximum edge
+server quantity in training context space. Specifically, in fig. 7,
+it satisfies E = 9, Emax′ = 10 but Emax = 8. The occurrence
+is generally infrequent. This occurrence typically only arises
+when computing resources or training time are constrained.
+VI. CONCLUSION
+In this work, we investigated the offloading problem in MEC
+systems and proposed a GMORL-based algorithm that can
+generalize to diverse MEC systems and achieve Pareto fronts.
+The proposed GMORL method has two key advantages: (1)
+it employs a single-policy GMORL framework for various
+preferences rather than multiple-policy models. (2) it can adapt
+to heterogeneous MEC systems with varying CPU frequencies
+and server quantities.
+We present a novel contextual MOMDP framework for
+the multi-objective offloading problem in MEC systems. Our
+framework includes three key components: (1) a well-designed
+encoding method to construct features of multi-edge MEC
+systems. (2) a sophisticated reward function to evaluate the
+immediate utility of delay and energy consumption. (3) an
+innovative neural network architecture that supports policy
+generalization. Simulation results demonstrate the effective-
+ness of our proposed GMORL scheme, which achieves Pareto
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+12
+3.0
+3.5
+4.0
+4.5
+5.0
+Cloud server CPU frequency (GHz)
+16
+18
+20
+Task delay (Minute)
+GMORL policy
+Reference policy
+(a)
+1.50
+1.75
+2.00
+2.25
+2.50
+Edge server CPU frequency (GHz)
+15
+20
+25
+30
+Task delay (Minute)
+GMORL policy
+Reference policy
+(b)
+3.0
+3.5
+4.0
+4.5
+5.0
+Cloud server CPU frequency (GHz)
+2.6
+2.8
+3.0
+3.2
+3.4
+Energy consumption (Joule)
+GMORL policy
+Reference policy
+(c)
+1.50
+1.75
+2.00
+2.25
+2.50
+Edge server CPU frequency (GHz)
+2
+3
+4
+Energy consumption (Joule)
+GMORL policy
+Reference policy
+(d)
+Fig. 6. CPU frequency generalization experiment when E = 6, ¯L = 16 Mbits regarding total task delay (a), (b) and total energy consumption (c), (d). The
+greater similarity between the performances of the two policies indicates a higher degree of CPU frequency generalization of the GMORL policy.
+20
+40
+60
+80
+Task delay (Minute)
+4
+5
+6
+Energy consumption (Joule)
+GMORL policy
+Reference policy
+Fig. 7. Pareto fronts of GMORL policy and reference policy when E = 9 ,
+Cf0 = [3.0, 5.0] GHz and CfE′ = [1.5, 2.5] GHz.
+fronts in various scenarios and outperforms benchmarks by up
+to 121.0%.
+APPENDIX
+The appendix is available at:
+https://anonymous.4open.science/r/GMORL/gmorl-
+appendix.pdf.
+REFERENCES
+[1] F. Pervez, A. Sultana, C. Yang, and L. Zhao, “Energy and latency effi-
+cient joint communication and computation optimization in a multi-uav-
+assisted mec network,” IEEE Transactions on Wireless Communications,
+vol. 23, no. 3, pp. 1728–1741, 2024.
+[2] J. Li, H. Gao, T. Lv, and Y. Lu, “Deep reinforcement learning based
+computation offloading and resource allocation for mec,” in 2018 IEEE
+Wireless Communications and Networking Conference (WCNC). IEEE,
+2018, pp. 1–6.
+[3] F. Fang, Y. Xu, Z. Ding, C. Shen, M. Peng, and G. K. Karagiannidis,
+“Optimal task assignment and power allocation for noma mobile-edge
+computing networks,” arXiv preprint arXiv:1904.12389, 2019.
+[4] T. X. Tran and D. Pompili, “Joint task offloading and resource allocation
+for multi-server mobile-edge computing networks,” IEEE Transactions
+on Vehicular Technology, vol. 68, no. 1, pp. 856–868, 2018.
+[5] G. Cui, X. Li, L. Xu, and W. Wang, “Latency and energy optimization
+for mec enhanced sat-iot networks,” IEEE Access, vol. 8, pp. 55 915–
+55 926, 2020.
+[6] L. Lei, H. Xu, X. Xiong, K. Zheng, W. Xiang, and X. Wang, “Multiuser
+resource control with deep reinforcement learning in iot edge comput-
+ing,” IEEE Internet of Things J., vol. 6, no. 6, pp. 10 119–10 133, 2019.
+[7] F. Jiang, K. Wang, L. Dong, C. Pan, and K. Yang, “Stacked autoencoder-
+based deep reinforcement learning for online resource scheduling in
+large-scale mec networks,” IEEE Internet of Things J., vol. 7, no. 10,
+pp. 9278–9290, 2020.
+[8] D. M. Roijers, P. Vamplew, S. Whiteson, and R. Dazeley, “A survey
+of multi-objective sequential decision-making,” Journal of Artificial
+Intelligence Research, vol. 48, pp. 67–113, 2013.
+[9] R. Yang, X. Sun, and K. Narasimhan, “A generalized algorithm for
+multi-objective reinforcement learning and policy adaptation,” Advances
+in neural information processing systems, vol. 32, 2019.
+[10] J. Yan, S. Bi, and Y. J. A. Zhang, “Offloading and resource allocation
+with general task graph in mobile edge computing: A deep reinforcement
+learning approach,” IEEE Transactions on Wireless Communications,
+vol. 19, no. 8, pp. 5404–5419, 2020.
+[11] Y. Li, J. Li, Z. Lv, H. Li, Y. Wang, and Z. Xu, “Gasto: A fast
+adaptive graph learning framework for edge computing empowered task
+offloading,” IEEE Transactions on Network and Service Management,
+2023.
+[12] Z. Gao, L. Yang, and Y. Dai, “Fast adaptive task offloading and
+resource allocation in large-scale mec systems via multi-agent graph
+reinforcement learning,” IEEE Internet of Things Journal, 2023.
+[13] T. Ren, J. Niu, and Y. Qiu, “Enhancing generalization of computation
+offloading policies in novel mobile edge computing environments by
+exploiting experience utility,” Journal of Systems Architecture, vol. 125,
+p. 102444, 2022.
+[14] L. Huang, S. Bi, and Y.-J. A. Zhang, “Deep reinforcement learning
+for online computation offloading in wireless powered mobile-edge
+computing networks,” IEEE Transactions on Mobile Computing, vol. 19,
+no. 11, pp. 2581–2593, 2019.
+[15] J. Tobin, R. Fong, A. Ray, J. Schneider, W. Zaremba, and P. Abbeel,
+“Domain randomization for transferring deep neural networks from
+simulation to the real world,” in 2017 IEEE/RSJ international conference
+on intelligent robots and systems (IROS).
+IEEE, 2017, pp. 23–30.
+[16] C. F. Hayes, R. R˘adulescu, E. Bargiacchi, J. K¨allstr¨om, M. Macfarlane,
+M. Reymond, T. Verstraeten, L. M. Zintgraf, R. Dazeley, F. Heintz
+et al., “A practical guide to multi-objective reinforcement learning and
+planning,” Autonomous Agents and Multi-Agent Systems, vol. 36, no. 1,
+pp. 1–59, 2022.
+[17] R. Kirk, A. Zhang, E. Grefenstette, and T. Rockt¨aschel, “A sur-
+vey of generalisation in deep reinforcement learning,” arXiv preprint
+arXiv:2111.09794, 2021.
+[18] D. Ghosh, J. Rahme, A. Kumar, A. Zhang, R. P. Adams, and S. Levine,
+“Why generalization in rl is difficult: Epistemic pomdps and implicit
+partial observability,” Advances in Neural Information Processing Sys-
+tems, vol. 34, pp. 25 502–25 515, 2021.
+[19] D. C. Nguyen, P. N. Pathirana, M. Ding, and A. Seneviratne, “Deep
+reinforcement learning for collaborative offloading in heterogeneous
+edge networks,” in 2021 IEEE/ACM 21st International Symposium on
+Cluster, Cloud and Internet Computing (CCGrid).
+IEEE, 2021, pp.
+297–303.
+[20] F. Jiang, L. Dong, K. Wang, K. Yang, and C. Pan, “Distributed resource
+scheduling for large-scale mec systems: A multiagent ensemble deep
+reinforcement learning with imitation acceleration,” IEEE Internet of
+Things Journal, vol. 9, no. 9, pp. 6597–6610, 2021.
+[21] J. Wang, J. Hu, G. Min, A. Y. Zomaya, and N. Georgalas, “Fast
+adaptive task offloading in edge computing based on meta reinforcement
+learning,” IEEE Transactions on Parallel and Distributed Systems,
+vol. 32, no. 1, pp. 242–253, 2020.
+[22] T. Wu, W. Jing, X. Wen, Z. Lu, and S. Zhao, “A scalable computation
+offloading scheme for mec based on graph neural networks,” in 2021
+IEEE Globecom Workshops (GC Wkshps).
+IEEE, 2021, pp. 1–6.
+[23] Z. Hu, J. Niu, T. Ren, and M. Guizani, “Achieving fast environment
+adaptation of drl-based computation offloading in mobile edge comput-
+ing,” IEEE Transactions on Mobile Computing, 2023.
+[24] N. Yang, J. Wen, M. Zhang, and M. Tang, “Multi-objective deep
+reinforcement learning for mobile edge computing,” in 2023 21st in-
+
+IEEE TRANSACTIONS ON SERVICES COMPUTING
+13
+ternational symposium on modeling and optimization in mobile, ad hoc,
+and wireless networks (WiOpt).
+IEEE, 2023, pp. 1–8.
+[25] J. Chang, J. Wang, B. Li, Y. Zhao, and D. Li, “Attention-based deep
+reinforcement learning for edge user allocation,” IEEE Transactions on
+Network and Service Management, 2023.
+[26] L. Lei, H. Xu, X. Xiong, K. Zheng, and W. Xiang, “Joint computation
+offloading and multiuser scheduling using approximate dynamic pro-
+gramming in nb-iot edge computing system,” IEEE Internet of Things
+J., vol. 6, no. 3, pp. 5345–5362, 2019.
+[27] K. Wang, F. Fang, D. Costa, and Z. Ding, “Sub-channel scheduling, task
+assignment, and power allocation for oma-based and noma-based mec
+systems,” IEEE Trans. Commun., vol. PP, no. 99, pp. 1–1, 2020.
+[28] R. S. Sutton, D. McAllester, S. Singh, and Y. Mansour, “Policy gradi-
+ent methods for reinforcement learning with function approximation,”
+Advances in neural information processing systems, vol. 12, 1999.
+[29] P. Christodoulou, “Soft actor-critic for discrete action settings,” arXiv
+preprint arXiv:1910.07207, 2019.
+[30] S. Parisi, M. Pirotta, N. Smacchia, L. Bascetta, and M. Restelli, “Policy
+gradient approaches for multi-objective sequential decision making,”
+in 2014 International Joint Conference on Neural Networks (IJCNN).
+IEEE, 2014, pp. 2323–2330.
+[31] “Ieee standard for telecommunications and information exchange be-
+tween systems - lan/man specific requirements - part 11: Wireless
+medium access control (mac) and physical layer (phy) specifications:
+High speed physical layer in the 5 ghz band,” IEEE Std 802.11a-1999,
+pp. 1–102, 1999.
+[32] L. Li, W. Chu, J. Langford, and R. E. Schapire, “A contextual-bandit
+approach to personalized news article recommendation,” in Proceedings
+of the 19th international conference on World wide web, 2010, pp. 661–
+670.
+[33] L. Chen and J. Xu, “Task replication for vehicular cloud: Contextual
+combinatorial bandit with delayed feedback,” in IEEE INFOCOM 2019-
+IEEE Conference on Computer Communications. IEEE, 2019, pp. 748–
+756.
+[34] H. Zhao, X. Li, S. Han, L. Yan, and J. Yu, “Collaboration-aware relay
+selection for auv in internet of underwater network: Evolving contextual
+bandit learning approach,” IEEE Internet of Things Journal, 2022.
+[35] S. Bi and Y. J. Zhang, “Computation rate maximization for wireless
+powered mobile-edge computing with binary computation offloading,”
+IEEE Transactions on Wireless Communications, vol. 17, no. 6, pp.
+4177–4190, 2018.
+[36] K. Deb, A. Pratap, S. Agarwal, and T. Meyarivan, “A fast and elitist
+multiobjective genetic algorithm: Nsga-ii,” IEEE transactions on evolu-
+tionary computation, vol. 6, no. 2, pp. 182–197, 2002.
+[37] H. Ma, Y. Zhang, S. Sun, T. Liu, and Y. Shan, “A comprehensive survey
+on nsga-ii for multi-objective optimization and applications,” Artificial
+Intelligence Review, vol. 56, no. 12, pp. 15 217–15 270, 2023.
+[38] K. Van Moffaert and A. Now´e, “Multi-objective reinforcement learning
+using sets of pareto dominating policies,” The Journal of Machine
+Learning Research, vol. 15, no. 1, pp. 3483–3512, 2014.
+[39] S. Natarajan and P. Tadepalli, “Dynamic preferences in multi-criteria
+reinforcement learning,” in Proceedings of the 22nd International Con-
+ference on Machine learning, 2005, pp. 601–608.
+
+1
+APPENDIX A
+DIFFERENCES IN GENERALIZATION COMPARED TO
+RELATED WORKS
+We summarize the distinctions between our approach and
+existing works. Many studies [1]–[6] are limited to problems
+that optimize for a single preference. Li et al. [3] employ a Q-
+learning-based deep reinforcement learning (DRL) method to
+solve the computation offloading problem in a multi-user envi-
+ronment. Cui et al. [1] decomposes user association, offloading
+decision, computing, and communication resource allocation
+into two related sub-problems and employs the DQN algorithm
+for decision-making. Lei et al. [2] proposed a DRL-based joint
+computation offloading and multi-user scheduling algorithm
+for IoT edge computing systems, aiming to minimize the long-
+term weighted sum of delay and power consumption under
+stochastic traffic arrivals. Huang et al. [4] employed an im-
+proved DQN method to address offloading decision problems
+and resource allocation problems. The above works focus on
+two objectives, delay and energy consumption, and use a
+weight coefficient to balance them or optimize one objective
+while satisfying the constraints of the other. Moreover, these
+studies lack research on the generalization.
+Some studies [7]–[11] focus only on the generalization of
+system parameters. Li et al. [7] combine graph neural networks
+and seq2seq networks to make decisions on task offload-
+ing. They employ a meta-reinforcement learning approach
+to enhance the generalization of the offloading strategy in
+environments with different system parameters. Ren et al. [8]
+design a set of experience maintaining and sampling strategies
+to improve the training process of DRL, enhancing the model’s
+generalization to different environments. Wang et al. [9] design
+an offloading decision algorithm based on meta-reinforcement
+learning, which uses a seq2seq neural network to represent
+the offloading policy. This approach can adapt to various
+environments covering a wide range of topologies, task num-
+bers, and transmission rates. Wu et al. [10] propose a method
+that combines graph neural networks and DRL, which can
+be applied to various environments with inter-dependencies
+among different tasks. Hu et al. [11] propose a size-adaptive
+offloading scheme and a setting-adaptive offloading compo-
+nent, designed to quickly adapt to new MEC environments of
+varying sizes and configurations with a few interaction steps.
+The above work only considers generalization in terms of
+system parameters, without addressing generalization in terms
+of the number of servers and multi-preference issues.
+Other works [12]–[14] only consider the generalization of
+the number of servers. A few works consider the generalization
+of both system parameters and the number of servers. Gao
+et al. [15] model the decentralized task offloading problem
+as a partially observable Markov decision process and use
+a multi-agent RL method to train the policy. They consider
+the generalization of both system parameters and the number
+of servers, but do not explore multi-preference issues. Our
+method provides a deeper exploration of the generalization of
+the offloading strategy, considering the generalization in terms
+of multi-preference, system parameters, and server quantities.
+APPENDIX B
+SUPPLEMENTARY FIGURES
+B.1 System Model
+The MEC system model we consider is illustrated in Fig.
+A1. An MEC system consists of E edge servers, one remote
+cloud server. The system processes M tasks arriving sequen-
+tially, with each task being uploaded to only one server.
+Cloud 
+server
+Edge
+server E
+Edge
+server 2
+Edge
+server 1
+Task 1
+Task 2
+Task M
+...
+...
+Fig. A1: An illustrative example system model of MEC.
+B.2 Learning Approach
+During the training phase, we sample Ng contexts to create
+Ng MEC environments for each epoch. The preferences of
+these environments are determined by Eq. (32), while their
+number of servers E and frequencies f E are randomly drawn
+from the context space. These environments interact with the
+policy to generate experiences, which are stored in the replay
+buffer and used to update the policy.
+Context 2
+Context 1
+Context Ng
+Policy
+Environment 1
+Environment Ng
+...
+Environment 2
+Experiences
+Replay buffer
+Interact
+Sample
+and
+update
+ω1
+Random E , f
+...
+⟨st , at , rω(st , at), st+1⟩
+...
+ω2
+Random E , f
+ωNg
+Random E , f
+Fig. A2: The generalization learning approach.
+B.3 The Overview of the GMORL
+The structure of the GMORL algorithm is illustrated in Fig.
+A3.
+
+2
+TABLE A1
+CONTEXT SPACE FOR TRAINING AND TESTING
+Context space
+Training
+Testing
+The number of pref-
+erence Ng
+64
+101
+Edge server quantity
+CE
+{1, 2, . . . , 8}
+{1, 2, . . . , 10}
+Cloud
+server
+CPU
+frequency Cf0
+[3.5, 4.5] GHz
+[3.0, 5.0] GHz
+Edge
+server
+CPU
+frequency Cf E′
+[1.75, 2.25] GHz
+[1.5, 2.5] GHz
+Environment
+Experiences
+⟨st , at , rω(st , at), st+1⟩
+State st
+Neural network
+Action at
+Policy
+Reward rω(st, at)
+Next state st+1 
+Context space
+Context c
+Replay buffer
+Sample
+Sample and update
+Fig. A3: The overview of the GMORL algorithm.
+APPENDIX C
+SIMULATION SETUP
+We provide the context in Table A1. We set testing pref-
+erence set ΩNg according to Eq. (32) and fit Pareto front in
+Ng preferences. Each preference’s performance contains total
+delay and energy consumption for all tasks in one episode. We
+evaluate a performance (delay or energy consumption) with
+an average of 1000 episodes. A disk coverage has a radius of
+1000m to 2000m for a cloud server and 50m to 500m for an
+edge server. Each episode needs to initial different radiuses
+for the cloud and edge servers. We set the mean of task size
+¯L according to Eq. (1).
+C.1 Evaluation Metrics
+We consider the following metrics to evaluate the perfor-
+mances of the proposed algorithms.
+• Energy Consumption: The total energy consumption of
+one episode given as
+M
+P
+m=1
+Eoff
+m + Eexe
+m , and the average
+energy consumption per Mbits task of one episode given
+by
+M
+P
+m=1
+Eoff
+m +Eexe
+m
+¯L
+.
+• Task Delay: The total energy consumption of one episode
+given as
+M
+P
+m=1
+Eoff
+m + Eexe
+m , and the average energy
+consumption per Mbits task of one episode given by
+M
+P
+m=1
+Eoff
+m +Eexe
+m
+¯L
+.
+• Pareto Front:
+PF(Π) = {π ∈Π | ∄π′ ∈Π : yπ′ ≻P yπ}, where the
+symbols are defined by Eq. (12).
+• Hypervolume Metric:
+V(PF(Π)) =
+R
+R2 IVh(P F (Π))(z)dz, where the symbols
+are defined by Eq. (14).
+C.2 Baselines
+LinUCB-based scheme: The Offloading scheme is based on
+a kind of contextual MAB algorithm [16]. It is an improvement
+over the traditional UCB algorithm. This scheme uses states
+as MAB contexts and learns a policy by exploring different
+actions. We apply the multi-arm bandit algorithm. We regard
+each action as an arm and construct the feature of an arm
+from preference ω and server information vector st,e. Then,
+we update the parameter matrix based on the context and
+exploration results to learn a strategy that maximizes rewards.
+We train this scheme in preference set Ω101 and evaluate it for
+any preference in one. This method is computationally simple
+and incorporates context information, making it widely used
+in task offloading.
+SA-based scheme: The heuristic method searches for an
+optimal local solution for task offloading without contexts.
+We use this method to observe the performance of heuristic
+approaches. This method generates a fixed offloading scheme
+for each preference and then iteratively searches for better
+solutions through local search. Once a better solution is
+found, it is accepted or rejected with a certain probability.
+This scheme searches 10000 episodes for each preference.
+However, searching for a solution that only applies to a specific
+context is time-consuming.
+Random-based scheme: The random-based scheme has p
+probability to offload a task to the cloud server and 1 −p
+probability to a random edge server. We tune the probability
+p and evaluate the scheme to obtain a Pareto front.
+Multi-policy scheme: The multi-policy MORL approach
+[13] is based on the standard Discrete-SAC algorithm. We
+build 101 Discrete-SAC policy models for the 101 preference
+in Ω101 correspondingly. We train each policy model with
+f0 = 4 GHz and fe′ = 2 GHz. This method has no gen-
+eralization ability. A well-trained policy model is applicable
+to a specific context. However, benefiting from focusing on a
+specific context, this method is more likely to achieve optimal
+performance. We apply the method to determine the upper
+bound of the Pareto front.
+C.3 Convergence Performances
+We verify the convergence of the proposed GMORL algo-
+rithm. In Fig. A4a, we evaluate and plot the training reward of
+our algorithm. The reward shown in this figure is scalarized
+using Eq. (29). We observe that with the training episode
+increasing, the total reward converges. In fig. A4b and fig.
+A4c, as the training episodes increase, the delay and energy
+consumption decrease and converge to a stable value. This
+
+3
+indicates that the GMORL algorithm converges effectively and
+reach a Pareto local optimum. In the following subsection, we
+will specifically analyze other performances in various system
+settings.
+0
+10000
+20000
+Training episode
+20
+18
+16
+14
+Reward
+(a)
+0
+10000
+20000
+Training episode
+20
+25
+30
+35
+40
+Task delay(Minute)
+(b)
+0
+10000
+20000
+Training episode
+3.0
+3.5
+Energy consumption (Joule)
+(c)
+20000
+ 10000
+Training episode
+Energy consumption (Joule)
+3.5
+0
+3.0
+3.5
+4.0
+(d)
+Fig. A4: Convergence performance of the proposed GMORL algo-
+rithm: (a) Reward during training; (b) Total delay during training
+when E = 5, f0 = 4 GHz, fe′ = 2 GHz for all e′ ∈E′, and
+ω = (1, 0); (c) Total energy consumption during training when
+E = 5, CPU frequency f0 = 4 GHz, fe′ = 2 GHz for all e′ ∈E′,
+and preference ω = (0, 1); (d) Total energy consumption during
+training when E = 5, f0 = 4 GHz, fe′ = 2 GHz for all e′ ∈E′,
+and performance ω = (0.3, 0.7).
+0
+5000
+10000
+15000
+20000
+Training episode
+2.50
+2.75
+3.00
+3.25
+3.50
+3.75
+4.00
+Energy consumption (Joule)
+GMORL + FIFO
+GMORL + Preemptive
+GMORL + EDF
+Fig. A5: Comparisons of GMORL with FIFO, preemptive scheduling
+and EDF queue policies
+C.4 GMORL under Diverse Queue Strategies
+We conducted supplementary experiments incorporating
+preemptive scheduling and earliest deadline first (EDF) queue
+policies for comparison in Fig. A5. It can be seen from the
+experimental result graph that when GMORL is combined
+with FIFO, Preemptive, and EDF queue strategies respectively,
+the energy consumption shows a downward trend and grad-
+ually converges to a stable level as the number of training
+rounds increases. Although there are differences in energy
+consumption, the overall trend is consistent, indicating that
+GMORL has strong adaptability to different queue strategies
+when dealing with tasks with heterogeneous priorities. This
+verifies its robustness and generalization ability in scenarios
+with diverse queue strategies, indicating that the framework
+can flexibly adapt to the requirements of dynamic changes in
+task priorities in practical applications.
+APPENDIX D
+PROOF OF THEOREMS
+D.1 Proof of Theorem 1
+Proof. To prove the convergence of the GMORL algorithm,
+we analyze the algorithm with the scalarized reward structure.
+The Bellman operator T of the action-value function with the
+scalarized reward is:
+T πQ(st, at) = rω(st, at) + γEst+1∼ρπ(V (st+1)),
+(A1)
+where rω(st, at) = ωT × (αTrT(st, at), αErE(st, at)) is a
+scalarized reward function.
+For any two policies π and π′, the difference of the Bellman
+operators is:
+∥T πQ −T π′Q′∥= max
+s
+T πQ(s, a) −T π′Q′(s, a)
+
+= max
+s
+rω(s, a) + γEst+1∼ρπ(V (st+1))
+−
+ rω(s, a) + γEst+1∼ρπ′(V ′(st+1))
+ 
+= max
+s
+γEst+1∼ρπ(V (st+1) −V ′(st+1))
+
+≤γ max
+s
+|V (st+1) −V ′(st+1)|
+≤γ∥Q −Q′∥,
+(A2)
+Since T
+remains a contraction mapping even with the
+scalarized reward (as ω and α coefficients are fixed and do
+not affect the contraction property), the Banach fixed-point
+
+4
+theorem guarantees the existence of a unique fixed point Q∗
+such that:
+Q∗= T Q∗.
+(A3)
+Thus, we have:
+lim
+k→∞Qk = Q∗,
+(A4)
+where Qk+1 = T Qk.
+Next, we analyze the convergence of the policy network and
+the target networks. As the Q-functions converge towards Q∗,
+the policy network updates drive the policy πϕ towards the
+optimal policy π∗that maximizes these Q-values. The target
+networks use the soft update rule: ¯θi ←βθi+(1−β)¯θi, where
+β ∈(0, 1) to reduce the risk of divergence caused by chang-
+ing Q-value estimates. Therefore, we prove the convergence
+properties of GMORL.
+D.2 Proof of Corollary 1
+Proof. The computational complexity of this algorithm can
+be assessed using several parameters. During environment
+sampling, relevant context and features are generated for each
+environment on all edge servers, requiring O(NgE) operations
+per round. In each sampled environment, the number of op-
+erations required for the interaction processes is O(T). Thus,
+for all environments in each round, these operations require
+O(NgT) operations. For the neural network update section, as
+it involves operations such as replay of experiences and pa-
+rameter modifications for Q functions and policy networks, the
+number of operations in each training round is O(NupNnet).
+Therefore, in the Nep training session, the computational com-
+plexity of this algorithm is O(Nep(Ng(E + T) + NupNnet)).
+D.2 Proof of Theorem 2
+Proof.
+Since
+we
+aim
+to
+minimize
+the
+objective
+function
+Eq.10,
+and
+let
+J(π)
+=
+minπ Ex ∼π
+P
+m∈M γm (ωTTm + ωEEm)
+
+,
+we
+hope
+J(πt) > J(πt+1). For any two adjacent policies πt and πt+1,
+we derive a lower bound for their performance difference
+∆J = J(πt) −J(πt+1) as follows:
+We first compute the performance difference for two adja-
+cent policies:
+∆J =
+" X
+m∈M
+γm(ωT Tm(πt) + ωEEm(πt))
+#
+−
+" X
+m∈M
+γm(ωT Tm(πt+1) + ωEEm(πt+1))
+#
+=
+X
+m∈M
+γm[ωT (Tm(πt) −Tm(πt+1))
++ ωE(Em(πt) −Em(πt+1))]
+(A5)
+The difference in energy consumption between the two
+policies is:
+Em(πt) −Em(πt+1) ≥poff X
+e∈E
+[xm,e(πt) −xm,e(πt+1)] Lm
+Cu,e
++
+X
+e∈E
+[xm,e(πt) −xm,e(πt+1)]κηf 2
+e Lm
+(A6)
+The difference in time consumption between the two poli-
+cies is:
+Tm(πt) −Tm(πt+1) ≥ˆT off
+m (πt) −ˆT off
+m (πt+1)
+(A7)
+Therefore, the lower bound for the performance difference
+between adjacent policies is:
+∆J ≥
+X
+m∈M
+γm{ωE
+X
+e∈E
+[xm,e(πt) −xm,e(πt+1)](poff Lm
+Cu,e
++ κηf 2
+e Lm) + ωT [ ˆT off
+m (πt) −ˆT off
+m (πt+1)]}
+(A8)
+Let
+Φm,e
+=
+poff Lm
+Cu,e
++ κηf 2
+e Lm
+and
+Φmin
+=
+minm,e{γmωEΦm,e}
+Then:
+∆J ≥A∥πt −πt+1∥1
+(A9)
+where A = min{Φmin, minm{γmωT }} and ∥πt −πt+1∥1
+represents the L1-norm difference between the two policies.
+REFERENCES
+[1] G. Cui, X. Li, L. Xu, and W. Wang, “Latency and energy optimization
+for mec enhanced sat-iot networks,” IEEE Access, vol. 8, pp. 55 915–
+55 926, 2020.
+[2] L. Lei, H. Xu, X. Xiong, K. Zheng, W. Xiang, and X. Wang, “Multiuser
+resource control with deep reinforcement learning in iot edge comput-
+ing,” IEEE Internet of Things J., vol. 6, no. 6, pp. 10 119–10 133, 2019.
+[3] J. Li, H. Gao, T. Lv, and Y. Lu, “Deep reinforcement learning based
+computation offloading and resource allocation for mec,” in 2018 IEEE
+Wireless Communications and Networking Conference (WCNC). IEEE,
+2018, pp. 1–6.
+[4] L. Huang, S. Bi, and Y.-J. A. Zhang, “Deep reinforcement learning
+for online computation offloading in wireless powered mobile-edge
+computing networks,” IEEE Transactions on Mobile Computing, vol. 19,
+no. 11, pp. 2581–2593, 2019.
+[5] D. C. Nguyen, P. N. Pathirana, M. Ding, and A. Seneviratne, “Deep
+reinforcement learning for collaborative offloading in heterogeneous
+edge networks,” in 2021 IEEE/ACM 21st International Symposium on
+Cluster, Cloud and Internet Computing (CCGrid).
+IEEE, 2021, pp.
+297–303.
+[6] F. Jiang, L. Dong, K. Wang, K. Yang, and C. Pan, “Distributed resource
+scheduling for large-scale mec systems: A multiagent ensemble deep
+reinforcement learning with imitation acceleration,” IEEE Internet of
+Things Journal, vol. 9, no. 9, pp. 6597–6610, 2021.
+[7] Y. Li, J. Li, Z. Lv, H. Li, Y. Wang, and Z. Xu, “Gasto: A fast
+adaptive graph learning framework for edge computing empowered task
+offloading,” IEEE Transactions on Network and Service Management,
+2023.
+[8] T. Ren, J. Niu, and Y. Qiu, “Enhancing generalization of computation
+offloading policies in novel mobile edge computing environments by
+exploiting experience utility,” Journal of Systems Architecture, vol. 125,
+p. 102444, 2022.
+[9] J. Wang, J. Hu, G. Min, A. Y. Zomaya, and N. Georgalas, “Fast
+adaptive task offloading in edge computing based on meta reinforcement
+learning,” IEEE Transactions on Parallel and Distributed Systems,
+vol. 32, no. 1, pp. 242–253, 2020.
+[10] T. Wu, W. Jing, X. Wen, Z. Lu, and S. Zhao, “A scalable computation
+offloading scheme for mec based on graph neural networks,” in 2021
+IEEE Globecom Workshops (GC Wkshps).
+IEEE, 2021, pp. 1–6.
+[11] Z. Hu, J. Niu, T. Ren, and M. Guizani, “Achieving fast environment
+adaptation of drl-based computation offloading in mobile edge comput-
+ing,” IEEE Transactions on Mobile Computing, 2023.
+[12] F. Jiang, K. Wang, L. Dong, C. Pan, and K. Yang, “Stacked autoencoder-
+based deep reinforcement learning for online resource scheduling in
+large-scale mec networks,” IEEE Internet of Things J., vol. 7, no. 10,
+pp. 9278–9290, 2020.
+[13] N. Yang, J. Wen, M. Zhang, and M. Tang, “Multi-objective deep
+reinforcement learning for mobile edge computing,” in 2023 21st in-
+ternational symposium on modeling and optimization in mobile, ad hoc,
+and wireless networks (WiOpt).
+IEEE, 2023, pp. 1–8.
+
+5
+[14] J. Chang, J. Wang, B. Li, Y. Zhao, and D. Li, “Attention-based deep
+reinforcement learning for edge user allocation,” IEEE Transactions on
+Network and Service Management, 2023.
+[15] Z. Gao, L. Yang, and Y. Dai, “Fast adaptive task offloading and
+resource allocation in large-scale mec systems via multi-agent graph
+reinforcement learning,” IEEE Internet of Things Journal, 2023.
+[16] L. Li, W. Chu, J. Langford, and R. E. Schapire, “A contextual-bandit
+approach to personalized news article recommendation,” in Proceedings
+of the 19th international conference on World wide web, 2010, pp. 661–
+670.

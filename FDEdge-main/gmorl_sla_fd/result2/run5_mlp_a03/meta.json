@@ -1,0 +1,12 @@
+{
+  "conf": "multi-part",
+  "deadline": 20.0,
+  "episodes": 300,
+  "denoising_steps": 3,
+  "start_mode": "prior",
+  "actor": "mlp",
+  "task_size_cap": 20000000.0,
+  "sla": true,
+  "sla_lambda": 1.0,
+  "seed": 0
+}
