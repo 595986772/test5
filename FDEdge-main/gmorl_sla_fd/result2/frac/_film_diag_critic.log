@@ -1,0 +1,31 @@
+C:\Users\����\AppData\Local\Temp\claude\D--python-project----5\cc14f2bb-1e73-40ce-9aff-f5ab40b725d6\scratchpad\diag_critic_vs_actor.py:26: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  diff.load_state_dict(torch.load(os.path.join(ROOT,TAG,'actor.pt'), map_location=dev)); diff.eval()
+C:\Users\����\AppData\Local\Temp\claude\D--python-project----5\cc14f2bb-1e73-40ce-9aff-f5ab40b725d6\scratchpad\diag_critic_vs_actor.py:27: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  c1 = VCritic(SD, N).to(dev); c1.load_state_dict(torch.load(os.path.join(ROOT,TAG,'c1.pt'), map_location=dev)); c1.eval()
+C:\Users\����\AppData\Local\Temp\claude\D--python-project----5\cc14f2bb-1e73-40ce-9aff-f5ab40b725d6\scratchpad\diag_critic_vs_actor.py:28: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  c2 = VCritic(SD, N).to(dev); c2.load_state_dict(torch.load(os.path.join(ROOT,TAG,'c2.pt'), map_location=dev)); c2.eval()
+C:\Users\����\AppData\Local\Temp\claude\D--python-project----5\cc14f2bb-1e73-40ce-9aff-f5ab40b725d6\scratchpad\diag_critic_vs_actor.py:29: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  pa = torch.load(os.path.join(ROOT,TAG,'popart.pt'), map_location=dev)
+### TAG=seq_het_sacfilm ###
+==============================================================================
+w=0.0  (w=1 纯延迟: env应偏好快/全展开; w=0 纯能耗: 应偏好绿/少台)
+==============================================================================
+ 步0: env最优=CPU对{23}     (d=8.48,e=0.174) | critic最优=CPU对{23}      | actor均支撑=(1, 0, 0, 1, 0)
+        critic Top4: CPU对{23}=-30.22 | 慢绿{234}=-30.30 | 均分5{01234}=-30.73 | 4台{0123}=-31.12
+ 步1: env最优=CPU对{23}     (d=9.28,e=0.136) | critic最优=单GPU{0}       | actor均支撑=(1, 0, 0, 0, 1)
+        critic Top4: 单GPU{0}=-28.83 | GPU对+mid{014}=-28.94 | GPU+CPU{02}=-28.97 | 慢绿{234}=-29.04
+ 步2: env最优=CPU对{23}     (d=8.28,e=0.117) | critic最优=慢绿{234}       | actor均支撑=(0, 0, 0, 1, 1)
+        critic Top4: 慢绿{234}=-27.43 | CPU对{23}=-27.49 | GPU+CPU{02}=-27.78 | GPU对+mid{014}=-27.94
+  -> env最优 与 critic最优 支撑一致: 4/8 | actor均输出 与 critic最优 一致: 1/8
+==============================================================================
+w=1.0  (w=1 纯延迟: env应偏好快/全展开; w=0 纯能耗: 应偏好绿/少台)
+==============================================================================
+ 步0: env最优=均分5{01234}   (d=3.45,e=0.206) | critic最优=GPU对+mid{014} | actor均支撑=(1, 1, 0, 1, 0)
+        critic Top4: GPU对+mid{014}=-8.26 | 均分5{01234}=-8.46 | GPU对{01}=-8.46 | 4台{0123}=-8.52
+ 步1: env最优=均分5{01234}   (d=3.79,e=0.161) | critic最优=GPU对+mid{014} | actor均支撑=(1, 0, 0, 0, 1)
+        critic Top4: GPU对+mid{014}=-7.99 | 均分5{01234}=-8.07 | GPU对{01}=-8.33 | 4台{0123}=-8.40
+ 步2: env最优=均分5{01234}   (d=3.37,e=0.152) | critic最优=均分5{01234}    | actor均支撑=(1, 1, 1, 1, 1)
+        critic Top4: 均分5{01234}=-7.70 | GPU对+mid{014}=-7.78 | 4台{0123}=-8.02 | GPU对{01}=-8.02
+  -> env最优 与 critic最优 支撑一致: 3/8 | actor均输出 与 critic最优 一致: 3/8
+
+[done] 解读: env≠critic 多 → critic低估延迟; critic≠actor 多 → actor塌缩

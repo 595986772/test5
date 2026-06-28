@@ -1,0 +1,21 @@
+D:\python_project\ʵ���5\FDEdge-main\gmorl_sla_fd\train_frac_seq.py:108: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  wsd = torch.load(wpath, map_location=dev)
+[warmstart] actor 权重载自 direct_sp_diff
+dev=cuda actor=diffusion seq deadline=7.0 dt=4.0 γ=0.90 warmstart=direct_sp_diff
+[warm] 用当前(热启动)策略灌 buffer 20 ep...
+  buffer=600
+ep000 | delay= 2.12 energy=0.1298 viol=0.000 p95= 2.20 | c_loss=3.958 q=-0.100
+ep020 | delay= 5.06 energy=0.1121 viol=0.000 p95= 6.00 | c_loss=0.131 q=-3.531
+ep040 | delay= 8.70 energy=0.1110 viol=0.800 p95= 9.98 | c_loss=0.393 q=-6.017
+ep060 | delay= 4.95 energy=0.1231 viol=0.000 p95= 5.58 | c_loss=0.565 q=-7.686
+ep080 | delay= 3.01 energy=0.1274 viol=0.000 p95= 3.19 | c_loss=0.719 q=-9.026
+ep100 | delay= 2.75 energy=0.1308 viol=0.000 p95= 2.93 | c_loss=0.711 q=-10.118
+ep120 | delay= 5.16 energy=0.1077 viol=0.000 p95= 6.63 | c_loss=0.770 q=-11.061
+ep140 | delay= 3.37 energy=0.1246 viol=0.000 p95= 3.70 | c_loss=0.847 q=-11.346
+ep160 | delay= 6.81 energy=0.1041 viol=0.500 p95= 7.22 | c_loss=0.846 q=-11.639
+ep180 | delay= 3.41 energy=0.1313 viol=0.000 p95= 3.89 | c_loss=0.714 q=-11.910
+ep200 | delay= 2.22 energy=0.1311 viol=0.000 p95= 2.45 | c_loss=0.740 q=-12.241
+ep220 | delay= 2.44 energy=0.1307 viol=0.000 p95= 2.69 | c_loss=0.691 q=-12.120
+ep240 | delay= 3.29 energy=0.1279 viol=0.000 p95= 3.50 | c_loss=0.611 q=-12.236
+ep249 | delay= 5.28 energy=0.0990 viol=0.000 p95= 6.24 | c_loss=0.653 q=-12.207
+[saved] result2/frac\seq_sp_diff

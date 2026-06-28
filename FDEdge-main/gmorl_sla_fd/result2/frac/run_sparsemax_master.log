@@ -1,0 +1,12 @@
+[20:24:25] === SPARSEMAX 主对比: 显式z开关, 多峰留扩散 (PopArt默认开) ===
+[20:24:25] >>> direct_sp_diff
+[20:30:27] <<< direct_sp_diff DONE
+[20:30:27] >>> direct_sp_gauss
+[20:31:04] <<< direct_sp_gauss DONE
+[20:31:04] >>> seq_sp_diff
+[20:38:51] <<< seq_sp_diff DONE
+[20:38:51] >>> seq_sp_gauss
+[20:40:47] <<< seq_sp_gauss DONE
+[20:40:48] >>> eval_sp
+[20:42:34] <<< eval_sp DONE
+[20:42:34] === SPARSEMAX DONE ===

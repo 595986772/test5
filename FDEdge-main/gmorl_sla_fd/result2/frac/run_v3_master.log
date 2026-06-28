@@ -1,0 +1,8 @@
+[14:32:06] === v3 PopArt main compare (仅改 PopArt, 其余同 v2) ===
+[14:32:06] >>> seq_diff_pa
+[14:35:48] <<< seq_diff_pa DONE
+[14:35:48] >>> seq_gauss_pa
+[14:37:29] <<< seq_gauss_pa DONE
+[14:37:29] >>> eval_pa
+[14:38:11] <<< eval_pa DONE
+[14:38:11] === DONE ===

@@ -1,0 +1,12 @@
+[14:51:08] === DIAG: BC锁死 vs env单峰 ===
+[14:51:08] >>> diff_bc0
+[14:53:44] <<< diff_bc0 DONE
+[14:53:44] >>> eval_bc0
+[14:54:49] <<< eval_bc0 DONE
+[14:54:50] >>> diff_het
+[14:57:33] <<< diff_het DONE
+[14:57:33] >>> gauss_het
+[14:59:07] <<< gauss_het DONE
+[14:59:07] >>> eval_het
+[14:59:43] <<< eval_het DONE
+[14:59:43] === DIAG DONE ===

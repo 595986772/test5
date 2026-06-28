@@ -43,6 +43,8 @@ def main():
     ap.add_argument('--omega_sample', type=str, default='uniform', choices=['uniform', 'ushaped'],
                     help='ushaped=Beta(0.5,0.5) 加权 ω 极值, 改善 delay/energy 极端欠训练')
     ap.add_argument('--fixed_alpha', type=float, default=None, help='固定温度(防熵崩); 不给=自动调温')
+    ap.add_argument('--alpha_anneal', type=str, default=None,
+                    help='温度线性退火 "hi,lo" (如 "0.3,0.05"): 前期高探索→后期低收尖, 优先级高于 fixed_alpha')
     ap.add_argument('--sla_lambda', type=float, default=1.0, help='SLA 标量化权重 (拧大=更重视合规)')
     ap.add_argument('--sla_penalty_scale', type=float, default=0.05, help='SLA 超时惩罚系数 (env 端)')
     ap.add_argument('--admission', action='store_true', help='训练期加截止期准入掩码 (硬机制)')
@@ -62,18 +64,28 @@ def main():
                   sla_penalty_scale=args.sla_penalty_scale, task_size_cap=args.task_size_cap)
     print('  deadline=%.1f  admission=%s margin=%.2f  task_cap=%s'
           % (args.deadline, args.admission, args.margin, args.task_size_cap))
-    _auto = args.fixed_alpha is None
+    anneal = None
+    if args.alpha_anneal is not None:
+        anneal = tuple(float(x) for x in args.alpha_anneal.split(','))   # (hi, lo)
+    _auto = (args.fixed_alpha is None) and (anneal is None)
+    _init_alpha = anneal[0] if anneal is not None else (0.05 if _auto else args.fixed_alpha)
     agent = FDSACAgent(denoising_steps=args.denoising_steps, start_mode=args.start_mode,
                        sla_lambda=(0.0 if args.no_sla else args.sla_lambda),
                        actor_type=args.actor, auto_alpha=_auto, use_prior_cond=args.use_prior_cond,
                        use_popart=args.use_popart,
                        reward_scale=((1.0, 1.0, 1.0) if args.use_popart else (0.1, 1.0, 1.0)),
-                       alpha=(0.05 if _auto else args.fixed_alpha), device=dev)
+                       alpha=_init_alpha, alpha_max=max(0.3, _init_alpha), device=dev)
+    if anneal is not None:
+        print('  alpha 退火: %.3f -> %.3f (线性, 按 episode)' % anneal)
     buf = ReplayBuffer(100000)
 
     WARMUP, BATCH = 500, 128
     log_rows = []
     for ep in range(args.episodes):
+        if anneal is not None:                       # 温度退火: hi -> lo 线性
+            frac = ep / max(1, args.episodes - 1)
+            a_ep = anneal[0] + (anneal[1] - anneal[0]) * frac
+            agent.log_alpha.data = torch.tensor(np.log(a_ep), dtype=torch.float, device=dev)
         w = float(np.random.beta(0.5, 0.5) if args.omega_sample == 'ushaped' else np.random.rand())
         env.w = w
         obs = env.reset()

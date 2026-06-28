@@ -1,0 +1,39 @@
+{
+  "ref_delay": 5.868847160460081,
+  "ref_energy": 0.13477579300435974,
+  "seed0": 1000,
+  "k": 12,
+  "n_omega": 11,
+  "viol_thresh": 0.1,
+  "tags": [
+    "seq_diff_v2",
+    "seq_gauss_v2"
+  ],
+  "actors": [
+    "diffusion",
+    "mlp"
+  ],
+  "ecfg": {
+    "n_servers": 5,
+    "deadline": 7.0,
+    "e_f_ratio": 0.2,
+    "agg_ratio": 0.1,
+    "idle_ratio": 0.4,
+    "keep_alive": 0,
+    "q_max_ratio": 0.2,
+    "sequential": true,
+    "arrival_dt": 4.0,
+    "horizon": 30,
+    "homogeneous": true
+  },
+  "per_tag": {
+    "seq_diff_v2": {
+      "n_srv": 5,
+      "T": 5
+    },
+    "seq_gauss_v2": {
+      "n_srv": 5,
+      "T": 5
+    }
+  }
+}

@@ -1,0 +1,11 @@
+[18:44:29] === ①扩散 m_div=1 (无diversity) ===
+[18:44:29] >>> diffM1
+[18:54:13] <<< diffM1 DONE
+[18:54:14] === ②gauss α=0.001 (低熵 best-shot) ===
+[18:54:14] >>> gaussA001
+[18:55:40] <<< gaussA001 DONE
+[18:55:41] >>> eval_diffM1_vs_gauss
+[18:56:32] <<< eval_diffM1_vs_gauss DONE
+[18:56:32] >>> eval_diff_vs_gaussA001
+[18:57:24] <<< eval_diff_vs_gaussA001 DONE
+[18:57:24] === DONE ===

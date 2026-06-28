@@ -1,0 +1,3 @@
+method,HV,feasHV,min_delay,n_feas
+seq_het_diff,0.073480,0.073480,6.8378,11
+seq_het_gauss,0.071131,0.071131,5.6218,11

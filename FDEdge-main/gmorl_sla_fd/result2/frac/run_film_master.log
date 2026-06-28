@@ -1,0 +1,14 @@
+[20:38:55] === ω-FiLM: diffusion(film+div0.05) vs gauss(film) ===
+[20:38:55] >>> seq_het_sacfilm
+[20:53:38] <<< seq_het_sacfilm DONE
+[20:53:38] >>> seq_het_gaussfilm
+[20:56:15] <<< seq_het_gaussfilm DONE
+[20:56:15] >>> eval_m1
+[20:57:49] <<< eval_m1 DONE
+[20:57:49] >>> eval_m32
+[20:59:31] <<< eval_m32 DONE
+[20:59:32] >>> diag_base
+[20:59:36] <<< diag_base DONE
+[20:59:37] >>> diag_critic
+[20:59:40] <<< diag_critic DONE
+[20:59:40] === DONE ===

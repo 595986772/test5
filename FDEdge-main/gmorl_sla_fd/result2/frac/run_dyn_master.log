@@ -1,0 +1,10 @@
+[15:26:27] === dyn go/no-go: diffusion(T20+sparse+div0.05, 无FiLM) vs gauss, 单动作评测 ===
+[15:26:27] >>> dyn_diff
+[15:37:21] <<< dyn_diff DONE
+[15:37:21] >>> dyn_gauss
+[15:38:54] <<< dyn_gauss DONE
+[15:38:55] >>> eval_m1
+[15:39:49] <<< eval_m1 DONE
+[15:39:49] >>> eval_m32
+[15:40:53] <<< eval_m32 DONE
+[15:40:54] === DONE ===

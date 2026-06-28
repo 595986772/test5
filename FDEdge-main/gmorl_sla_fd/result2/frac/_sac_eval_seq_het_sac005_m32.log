@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "D:\python_project\实验版5\FDEdge-main\gmorl_sla_fd\eval_frac.py", line 298, in <module>
+    main()
+  File "D:\python_project\实验版5\FDEdge-main\gmorl_sla_fd\eval_frac.py", line 194, in main
+    env_type, ecfg, per_tag = resolve_eval_cfg(tags, defaults)
+  File "D:\python_project\实验版5\FDEdge-main\gmorl_sla_fd\eval_frac.py", line 53, in resolve_eval_cfg
+    metas = {t: _read_meta(t) for t in tags}
+  File "D:\python_project\实验版5\FDEdge-main\gmorl_sla_fd\eval_frac.py", line 53, in <dictcomp>
+    metas = {t: _read_meta(t) for t in tags}
+  File "D:\python_project\实验版5\FDEdge-main\gmorl_sla_fd\eval_frac.py", line 45, in _read_meta
+    raise FileNotFoundError('[meta] %s 缺 meta.json -> 无法还原训练 env, 拒绝评估 (请用当前码重训生成)' % tag)
+FileNotFoundError: [meta] seq_het_sac005 缺 meta.json -> 无法还原训练 env, 拒绝评估 (请用当前码重训生成)

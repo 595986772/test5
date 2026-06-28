@@ -1,0 +1,6 @@
+dev=cuda actor=diffusion seq deadline=11.0 dt=6.0 γ=0.90 warmstart=无
+[warm] 用当前(热启动)策略灌 buffer 30 ep...
+  buffer=900
+ep000 | delay=12.72 energy=0.1782 viol=0.567 p95=21.08 | c_loss=7.151 q=-1.011 div=0.1005 α=0.313
+ep020 | delay= 4.94 energy=0.1652 viol=0.000 p95= 6.35 | c_loss=0.372 q=-8.441 div=0.0281 α=0.345
+ep040 | delay= 5.42 energy=0.1643 viol=0.000 p95= 7.10 | c_loss=0.631 q=-11.233 div=0.0181 α=0.381

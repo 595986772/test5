@@ -1,0 +1,22 @@
+D:\python_project\ʵ���5\FDEdge-main\gmorl_sla_fd\train_frac_seq.py:283: RuntimeWarning: Mean of empty slice
+  dv = np.nanmean([x[2] for x in logs]); al = np.nanmean([x[3] for x in logs])
+dev=cuda actor=mlp seq deadline=11.0 dt=6.0 γ=0.90 warmstart=无
+[warm] 用当前(热启动)策略灌 buffer 30 ep...
+  buffer=900
+ep000 | delay=12.89 energy=0.8929 viol=0.467 p95=24.92 | c_loss=25.859 q=-1.339
+ep020 | delay=36.17 energy=0.8297 viol=1.000 p95=47.85 | c_loss=0.368 q=-35.503
+ep040 | delay=25.50 energy=0.6434 viol=0.967 p95=45.75 | c_loss=0.377 q=-60.269
+ep060 | delay=23.97 energy=0.5807 viol=1.000 p95=31.90 | c_loss=0.514 q=-84.146
+ep080 | delay=17.81 energy=0.6182 viol=0.800 p95=31.38 | c_loss=0.614 q=-100.162
+ep100 | delay=12.85 energy=0.7641 viol=0.667 p95=19.16 | c_loss=0.614 q=-103.525
+ep120 | delay=11.62 energy=0.7586 viol=0.333 p95=20.95 | c_loss=0.623 q=-104.214
+ep140 | delay=12.71 energy=0.7435 viol=0.533 p95=19.06 | c_loss=0.608 q=-97.556
+ep160 | delay=12.22 energy=0.6454 viol=0.500 p95=20.82 | c_loss=0.671 q=-94.294
+ep180 | delay=10.90 energy=0.6413 viol=0.433 p95=17.45 | c_loss=0.607 q=-90.638
+ep200 | delay=12.95 energy=0.7109 viol=0.767 p95=16.91 | c_loss=0.675 q=-90.833
+ep220 | delay=10.57 energy=0.6345 viol=0.400 p95=14.27 | c_loss=0.555 q=-84.928
+ep240 | delay=12.57 energy=0.5793 viol=0.600 p95=19.98 | c_loss=0.583 q=-81.881
+ep260 | delay= 8.72 energy=0.5551 viol=0.133 p95=11.53 | c_loss=0.579 q=-78.713
+ep280 | delay=10.08 energy=0.6795 viol=0.333 p95=15.71 | c_loss=0.524 q=-79.180
+ep299 | delay= 9.88 energy=0.5197 viol=0.333 p95=13.56 | c_loss=0.535 q=-78.307
+[saved] result2/frac\dyn_gauss_s2

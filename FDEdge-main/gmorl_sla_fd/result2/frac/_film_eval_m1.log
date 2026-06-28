@@ -1,0 +1,145 @@
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\frac_agent.py:263: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  sd = torch.load(os.path.join(path, 'actor.pt'), map_location=self.dev)
+[meta] 2 tag env=hetero ‰∏ÄËá¥: dt=6.0 e_f=0.2 idle=0.4 deadline=11.0 horizon=30
+
+=== seq_het_sacfilm (diffusion) Êâ´ œâ ===
+  w=0.00 | delay= 8.95 energy=0.1398 viol=0.097 p95=11.13 (feas)
+  w=0.10 | delay= 8.78 energy=0.1405 viol=0.073 p95=10.91 (feas)
+  w=0.20 | delay= 8.56 energy=0.1410 viol=0.043 p95=10.63 (feas)
+  w=0.30 | delay= 8.39 energy=0.1421 viol=0.037 p95=10.40 (feas)
+  w=0.40 | delay= 8.13 energy=0.1439 viol=0.017 p95=10.14 (feas)
+  w=0.50 | delay= 7.69 energy=0.1459 viol=0.003 p95= 9.54 (feas)
+  w=0.60 | delay= 7.21 energy=0.1488 viol=0.007 p95= 9.32 (feas)
+  w=0.70 | delay= 6.88 energy=0.1515 viol=0.007 p95= 8.82 (feas)
+  w=0.80 | delay= 6.67 energy=0.1540 viol=0.007 p95= 8.30 (feas)
+  w=0.90 | delay= 6.56 energy=0.1557 viol=0.003 p95= 8.11 (feas)
+  w=1.00 | delay= 6.50 energy=0.1571 viol=0.003 p95= 8.10 (feas)
+
+=== seq_het_gaussfilm (mlp) Êâ´ œâ ===
+  w=0.00 | delay= 8.14 energy=0.1441 viol=0.070 p95=10.92 (feas)
+  w=0.10 | delay= 7.79 energy=0.1443 viol=0.050 p95=10.45 (feas)
+  w=0.20 | delay= 7.43 energy=0.1447 viol=0.037 p95= 9.99 (feas)
+  w=0.30 | delay= 6.96 energy=0.1463 viol=0.023 p95= 9.46 (feas)
+  w=0.40 | delay= 6.43 energy=0.1485 viol=0.003 p95= 8.48 (feas)
+  w=0.50 | delay= 5.94 energy=0.1513 viol=0.000 p95= 7.56 (feas)
+  w=0.60 | delay= 5.62 energy=0.1538 viol=0.000 p95= 7.03 (feas)
+  w=0.70 | delay= 5.43 energy=0.1557 viol=0.000 p95= 6.81 (feas)
+  w=0.80 | delay= 5.33 energy=0.1572 viol=0.000 p95= 6.83 (feas)
+  w=0.90 | delay= 5.25 energy=0.1591 viol=0.000 p95= 6.77 (feas)
+  w=1.00 | delay= 5.24 energy=0.1602 viol=0.000 p95= 6.76 (feas)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 36830 (\N{CJK UNIFIED IDEOGRAPH-8FDE}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 32493 (\N{CJK UNIFIED IDEOGRAPH-7EED}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 20998 (\N{CJK UNIFIED IDEOGRAPH-5206}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 25968 (\N{CJK UNIFIED IDEOGRAPH-6570}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 21368 (\N{CJK UNIFIED IDEOGRAPH-5378}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 36733 (\N{CJK UNIFIED IDEOGRAPH-8F7D}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 25193 (\N{CJK UNIFIED IDEOGRAPH-6269}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 25955 (\N{CJK UNIFIED IDEOGRAPH-6563}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 39640 (\N{CJK UNIFIED IDEOGRAPH-9AD8}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 26031 (\N{CJK UNIFIED IDEOGRAPH-65AF}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 23454 (\N{CJK UNIFIED IDEOGRAPH-5B9E}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 24515 (\N{CJK UNIFIED IDEOGRAPH-5FC3}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 21487 (\N{CJK UNIFIED IDEOGRAPH-53EF}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 34892 (\N{CJK UNIFIED IDEOGRAPH-884C}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 37325 (\N{CJK UNIFIED IDEOGRAPH-91CD}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 28857 (\N{CJK UNIFIED IDEOGRAPH-70B9}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 30475 (\N{CJK UNIFIED IDEOGRAPH-770B}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 20302 (\N{CJK UNIFIED IDEOGRAPH-4F4E}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 33021 (\N{CJK UNIFIED IDEOGRAPH-80FD}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 32791 (\N{CJK UNIFIED IDEOGRAPH-8017}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 35282 (\N{CJK UNIFIED IDEOGRAPH-89D2}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 21491 (\N{CJK UNIFIED IDEOGRAPH-53F3}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 19979 (\N{CJK UNIFIED IDEOGRAPH-4E0B}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 35841 (\N{CJK UNIFIED IDEOGRAPH-8C01}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 25903 (\N{CJK UNIFIED IDEOGRAPH-652F}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:288: UserWarning: Glyph 37197 (\N{CJK UNIFIED IDEOGRAPH-914D}) missing from current font.
+  ax.legend(fontsize=8); ax.grid(alpha=0.3); fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 36830 (\N{CJK UNIFIED IDEOGRAPH-8FDE}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 32493 (\N{CJK UNIFIED IDEOGRAPH-7EED}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 20998 (\N{CJK UNIFIED IDEOGRAPH-5206}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 25968 (\N{CJK UNIFIED IDEOGRAPH-6570}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 21368 (\N{CJK UNIFIED IDEOGRAPH-5378}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 36733 (\N{CJK UNIFIED IDEOGRAPH-8F7D}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 25193 (\N{CJK UNIFIED IDEOGRAPH-6269}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 25955 (\N{CJK UNIFIED IDEOGRAPH-6563}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 39640 (\N{CJK UNIFIED IDEOGRAPH-9AD8}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 26031 (\N{CJK UNIFIED IDEOGRAPH-65AF}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 23454 (\N{CJK UNIFIED IDEOGRAPH-5B9E}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 24515 (\N{CJK UNIFIED IDEOGRAPH-5FC3}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 21487 (\N{CJK UNIFIED IDEOGRAPH-53EF}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 34892 (\N{CJK UNIFIED IDEOGRAPH-884C}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 37325 (\N{CJK UNIFIED IDEOGRAPH-91CD}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 28857 (\N{CJK UNIFIED IDEOGRAPH-70B9}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 30475 (\N{CJK UNIFIED IDEOGRAPH-770B}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 20302 (\N{CJK UNIFIED IDEOGRAPH-4F4E}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 33021 (\N{CJK UNIFIED IDEOGRAPH-80FD}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 32791 (\N{CJK UNIFIED IDEOGRAPH-8017}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 35282 (\N{CJK UNIFIED IDEOGRAPH-89D2}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 21491 (\N{CJK UNIFIED IDEOGRAPH-53F3}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 19979 (\N{CJK UNIFIED IDEOGRAPH-4E0B}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 35841 (\N{CJK UNIFIED IDEOGRAPH-8C01}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 25903 (\N{CJK UNIFIED IDEOGRAPH-652F}) missing from current font.
+  fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\eval_frac.py:291: UserWarning: Glyph 37197 (\N{CJK UNIFIED IDEOGRAPH-914D}) missing from current font.
+  fig.savefig(png, dpi=130)
+
+=== baselines ===
+  uniform  delay= 4.61 energy=0.1801 viol=0.000 p95= 6.43
+  random   delay= 7.61 energy=0.1775 viol=0.130 p95=12.54
+
+=== HV (ÂÖ¨ÂÖ± ref delay=9.40 energy=0.1891) ===
+method           HV   feasHV min_delay   #feas
+seq_het_sacfilm    0.124    0.124      6.50      11
+seq_het_gaussfilm    0.172    0.172      5.24      11
+[saved] frac_eval_points.csv / frac_eval_summary.csv / frac_eval_meta.json (in result2/frac\cmp)
+
+[warn] Âõæ‰øùÂ≠òÂ§±Ë¥• ([Errno 22] Invalid argument: 'result2/frac\\cmp\\frac_pareto.png') ‚Äî Â§öÂçäÊòØËØ• PNG Ê≠£Ë¢´ÂõæÁâáÊü•ÁúãÂô®Âç†Áî®„ÄÇÂéüÂßãÊï∞ÊçÆ CSV/JSON Â∑≤‰øùÂ≠ò, ‰∏çÂΩ±ÂìçÁªìÊûú; ÂÖ≥ÊéâÊü•ÁúãÂô®ÈáçË∑ëÊàñÊâãÂä®ÈáçÁªòÂç≥ÂèØ„ÄÇ

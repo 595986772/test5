@@ -1,0 +1,15 @@
+==============================================================================
+[WARM-START PROTOTYPE ONLY] 本脚本用可微 surrogate (torch_scalar_reward) 训练。
+  它与硬 env 在小 fraction 区不可消除地不等: 硬 env 用硬阈值 a>1e-4 判 active,
+  surrogate 用尺度 tau 的 soft 掩码 -> 如 a=[0.99,0.01,0] 给高队列服务器, 硬 delay≈20s
+  而 surrogate≈10s。压 tau 到 1e-4 就没梯度 = 毁掉本脚本意义。
+  => 产物**只能**作 train_frac_seq 的 --warmstart 种子 (seq 在硬 env+critic 上纠偏),
+     不得作主结果或公平 baseline。主结果一律 train_frac_seq + eval_frac (都在硬 env)。
+==============================================================================
+dev=cuda actor=diffusion tag=diff_v2 iters=4000 N=5 deadline=7.0 e_f=20% sla_λ=3.0
+it    0 loss=1.609 | w0: d=5.28 e=0.0966 v=0.15 | w1: d=5.04 e=0.0966 v=0.11
+it 1000 loss=1.479 | w0: d=3.42 e=0.0967 v=0.00 | w1: d=3.29 e=0.0970 v=0.00
+it 2000 loss=1.454 | w0: d=3.56 e=0.0965 v=0.00 | w1: d=3.31 e=0.0970 v=0.00
+it 3000 loss=1.371 | w0: d=4.55 e=0.0843 v=0.00 | w1: d=3.30 e=0.0970 v=0.00
+it 3999 loss=1.152 | w0: d=6.23 e=0.0608 v=0.06 | w1: d=3.31 e=0.0970 v=0.00
+[saved] result2/frac\diff_v2

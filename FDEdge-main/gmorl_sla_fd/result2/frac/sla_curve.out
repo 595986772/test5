@@ -1,0 +1,99 @@
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\frac_agent.py:223: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  self.actor.load_state_dict(torch.load(os.path.join(path, 'actor.pt'), map_location=self.dev))
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 25805 (\N{CJK UNIFIED IDEOGRAPH-64CD}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 20316 (\N{CJK UNIFIED IDEOGRAPH-4F5C}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 26354 (\N{CJK UNIFIED IDEOGRAPH-66F2}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 32447 (\N{CJK UNIFIED IDEOGRAPH-7EBF}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 36829 (\N{CJK UNIFIED IDEOGRAPH-8FDD}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 32422 (\N{CJK UNIFIED IDEOGRAPH-7EA6}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 29575 (\N{CJK UNIFIED IDEOGRAPH-7387}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 24038 (\N{CJK UNIFIED IDEOGRAPH-5DE6}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 19978 (\N{CJK UNIFIED IDEOGRAPH-4E0A}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 26356 (\N{CJK UNIFIED IDEOGRAPH-66F4}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 20248 (\N{CJK UNIFIED IDEOGRAPH-4F18}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 25193 (\N{CJK UNIFIED IDEOGRAPH-6269}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 25955 (\N{CJK UNIFIED IDEOGRAPH-6563}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 21387 (\N{CJK UNIFIED IDEOGRAPH-538B}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 20303 (\N{CJK UNIFIED IDEOGRAPH-4F4F}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 39640 (\N{CJK UNIFIED IDEOGRAPH-9AD8}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 26031 (\N{CJK UNIFIED IDEOGRAPH-65AF}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 20219 (\N{CJK UNIFIED IDEOGRAPH-4EFB}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 32473 (\N{CJK UNIFIED IDEOGRAPH-7ED9}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 36798 (\N{CJK UNIFIED IDEOGRAPH-8FBE}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:107: UserWarning: Glyph 21040 (\N{CJK UNIFIED IDEOGRAPH-5230}) missing from current font.
+  fig.tight_layout()
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 25805 (\N{CJK UNIFIED IDEOGRAPH-64CD}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 20316 (\N{CJK UNIFIED IDEOGRAPH-4F5C}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 26354 (\N{CJK UNIFIED IDEOGRAPH-66F2}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 32447 (\N{CJK UNIFIED IDEOGRAPH-7EBF}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 36829 (\N{CJK UNIFIED IDEOGRAPH-8FDD}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 32422 (\N{CJK UNIFIED IDEOGRAPH-7EA6}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 29575 (\N{CJK UNIFIED IDEOGRAPH-7387}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 24038 (\N{CJK UNIFIED IDEOGRAPH-5DE6}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 19978 (\N{CJK UNIFIED IDEOGRAPH-4E0A}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 26356 (\N{CJK UNIFIED IDEOGRAPH-66F4}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 20248 (\N{CJK UNIFIED IDEOGRAPH-4F18}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 25193 (\N{CJK UNIFIED IDEOGRAPH-6269}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 25955 (\N{CJK UNIFIED IDEOGRAPH-6563}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 21387 (\N{CJK UNIFIED IDEOGRAPH-538B}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 20303 (\N{CJK UNIFIED IDEOGRAPH-4F4F}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 39640 (\N{CJK UNIFIED IDEOGRAPH-9AD8}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 26031 (\N{CJK UNIFIED IDEOGRAPH-65AF}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 20219 (\N{CJK UNIFIED IDEOGRAPH-4EFB}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 32473 (\N{CJK UNIFIED IDEOGRAPH-7ED9}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 36798 (\N{CJK UNIFIED IDEOGRAPH-8FBE}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+D:\python_project\ µ—È∞Ê5\FDEdge-main\gmorl_sla_fd\sla_curve_frac.py:109: UserWarning: Glyph 21040 (\N{CJK UNIFIED IDEOGRAPH-5230}) missing from current font.
+  png = os.path.join(RESULT, 'cmp', 'sla_curve_frac.png'); fig.savefig(png, dpi=130)
+
+=== SLA Êìç‰ΩúÁÇπ (ÂÖ¨ÂÖ± ref delay=11.73 energy=0.1014) ===
+actor         Œª    mean_viol       HV
+diffusion     0        0.246    0.250
+diffusion     1        0.059    0.244
+diffusion     3        0.040    0.261
+diffusion     6        0.029    0.270
+mlp           0        0.157    0.201
+mlp           1        0.053    0.242
+mlp           3        0.041    0.244
+mlp           6        0.034    0.244
+
+[saved] result2/frac\cmp\sla_curve_frac.png

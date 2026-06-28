@@ -1,0 +1,10 @@
+[17:24:07] === dyn2 (coord=0.10 dl=0.15): diffusion vs gauss, seed0, 单动作评测 ===
+[17:24:08] >>> dyn2_diff
+[17:36:30] <<< dyn2_diff DONE
+[17:36:30] >>> dyn2_gauss
+[17:38:45] <<< dyn2_gauss DONE
+[17:38:45] >>> eval_m1
+[17:39:33] <<< eval_m1 DONE
+[17:39:34] >>> eval_m32
+[17:40:28] <<< eval_m32 DONE
+[17:40:28] === DONE ===

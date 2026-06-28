@@ -1,5 +1,19 @@
 """GMORL MEC 环境 + SLA 扩展 (自包含, 不依赖 tianshou/gym).
 
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ ⚠️ 已废弃 (DEPRECATED, 2026-06-23) —— 禁止用于论文任何 SLA/能耗数字。           ║
+║ 项目主线已转向连续分数卸载 env (env_frac_offload.py, 对下述 bug 全部免疫)。      ║
+║ 本文件冻结仅作历史/理论转向的旁证, 三个已确认 bug (独立复现, 数字对得上):        ║
+║   ① SLA 只统计完成任务 (_compute_sla 只遍历 finished_task, line ~373/399):       ║
+║      Tmax 时在途/排队任务全丢 —— 复现: 100 已分配仅 32 计完成, 68 在途被弃。      ║
+║      慢任务=最易违约者被系统性剔除 → 违约率/p95/p99 系统性偏乐观。               ║
+║   ② 无到达伪造 size-0 任务 (generate_task line ~482: 队列空仍 task_size=0):       ║
+║      假任务被分配/即刻完成/计入 SLA —— λ=0 复现: 100 步 = 100 个 delay=0 假完成。 ║
+║   ③ 能耗双计 (分配时 line ~190/197 预置完整预估, 仿真 line ~236/302 再累加一遍):  ║
+║      stored_off/exe ÷ 单程预估 = 2.00 —— 训练奖励(step_energy 单计) ≠ 图里 J(双计)。║
+║ 决策: 不修 (废弃)。需对比 GMORL 时, 把其方法移植进连续 env 公平比, 不引本env数字。 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
 源自 Generalizable-Pareto-Optimal-Offloading (GMORL) 的 Env.py, 改动:
   1. 删掉 tianshou/gym/tensorboard 等无用 import, env 本身只需 numpy。
   2. 给每个任务加 assign_step / tid, 在 exe 完成时收集 finished_task。

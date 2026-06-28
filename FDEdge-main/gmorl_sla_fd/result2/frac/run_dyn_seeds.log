@@ -1,0 +1,22 @@
+[15:46:34] === seed 1 ===
+[15:46:34] >>> dyn_diff_s1
+[15:57:16] <<< dyn_diff_s1 DONE
+[15:57:16] >>> dyn_gauss_s1
+[15:59:39] <<< dyn_gauss_s1 DONE
+[15:59:39] >>> eval_s1
+[16:01:10] <<< eval_s1 DONE
+[16:01:11] === seed 2 ===
+[16:01:11] >>> dyn_diff_s2
+[16:14:28] <<< dyn_diff_s2 DONE
+[16:14:29] >>> dyn_gauss_s2
+[16:16:53] <<< dyn_gauss_s2 DONE
+[16:16:53] >>> eval_s2
+[16:18:22] <<< eval_s2 DONE
+[16:18:23] === seed 3 ===
+[16:18:23] >>> dyn_diff_s3
+[16:25:38] <<< dyn_diff_s3 DONE
+[16:25:38] >>> dyn_gauss_s3
+[16:27:54] <<< dyn_gauss_s3 DONE
+[16:27:54] >>> eval_s3
+[16:29:25] <<< eval_s3 DONE
+[16:29:25] === ALL SEEDS DONE ===

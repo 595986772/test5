@@ -1,0 +1,17 @@
+{
+  "actor": "mlp",
+  "tag": "gauss_a02",
+  "iters": 6000,
+  "batch": 512,
+  "seed": 0,
+  "n_srv": 5,
+  "deadline": 7.0,
+  "e_f_ratio": 0.2,
+  "agg_ratio": 0.1,
+  "q_max_ratio": 0.2,
+  "sla_lambda": 3.0,
+  "T": 5,
+  "alpha": 0.02,
+  "lr": 0.0003,
+  "hetero": false
+}

@@ -1,0 +1,12 @@
+[22:56:58] === M-候选 critic 选择: 扩散 vs 高斯 (都 sparsemax, 同协议) ===
+[22:56:59] >>> seq_sp_diff
+[23:01:56] <<< seq_sp_diff DONE
+[23:01:56] >>> seq_sp_gauss
+[23:03:13] <<< seq_sp_gauss DONE
+[23:03:13] >>> eval_m1
+[23:04:12] <<< eval_m1 DONE
+[23:04:12] >>> eval_m16
+[23:05:13] <<< eval_m16 DONE
+[23:05:13] >>> eval_m32
+[23:06:18] <<< eval_m32 DONE
+[23:06:18] === DONE ===

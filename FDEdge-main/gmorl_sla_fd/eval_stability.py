@@ -63,12 +63,13 @@ def main():
     ap.add_argument('--seed0', type=int, default=2000)
     ap.add_argument('--deadline', type=float, default=20.0)
     ap.add_argument('--task_size_cap', type=float, default=20e6)
-    ap.add_argument('--diff_tag', type=str, default='run4_cap')
+    ap.add_argument('--diff_tag', type=str, default='run11_diff5_anneal')
     ap.add_argument('--mlp_tag', type=str, default='run7_mlp_pop')
+    ap.add_argument('--denoising_steps', type=int, default=5, help='须与扩散训练一致')
     args = ap.parse_args()
     dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    models = [('Diffusion', load(args.diff_tag, 'diffusion', dev)),
+    models = [('Diffusion', load(args.diff_tag, 'diffusion', dev, steps=args.denoising_steps)),
               ('MLP', load(args.mlp_tag, 'mlp', dev))]
     print('=== 动作稳定性/鲁棒性 (K=%d, ω=0.5) ===' % args.k)
     print('%-10s %-9s %7s %7s %7s %7s' % ('model', 'cond', 'vol', 'viol', 'p95', 'p99'))

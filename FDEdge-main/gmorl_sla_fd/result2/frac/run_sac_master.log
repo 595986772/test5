@@ -1,0 +1,12 @@
+[19:31:56] === 路②扩散-SAC: 抗塌缩多样性 (div_target 0.05 / 0.10) ===
+[19:31:56] >>> seq_het_sac005
+[19:38:09] !!! seq_het_sac005 FAILED
+[19:38:10] >>> eval_seq_het_sac005_m1
+[19:38:19] !!! eval_seq_het_sac005_m1 FAILED
+[19:38:19] >>> eval_seq_het_sac005_m32
+[19:38:23] !!! eval_seq_het_sac005_m32 FAILED
+[19:38:24] >>> diag_seq_het_sac005_base
+[19:38:27] !!! diag_seq_het_sac005_base FAILED
+[19:38:28] >>> diag_seq_het_sac005_critic
+[19:38:33] !!! diag_seq_het_sac005_critic FAILED
+[19:38:33] >>> seq_het_sac010

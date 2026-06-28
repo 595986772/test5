@@ -1,0 +1,6 @@
+[22:25:49] === sparsemax 扩散 bc_eta=0 (解保守锚, 看能否压到 K=2.5) ===
+[22:25:50] >>> seq_sp_diff_bc0
+[22:29:50] <<< seq_sp_diff_bc0 DONE
+[22:29:51] >>> eval_sp_bc0
+[22:30:34] <<< eval_sp_bc0 DONE
+[22:30:34] === DONE ===

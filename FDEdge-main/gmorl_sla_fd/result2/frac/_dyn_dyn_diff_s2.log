@@ -1,0 +1,20 @@
+dev=cuda actor=diffusion seq deadline=11.0 dt=6.0 γ=0.90 warmstart=无
+[warm] 用当前(热启动)策略灌 buffer 30 ep...
+  buffer=900
+ep000 | delay=17.59 energy=0.8130 viol=0.767 p95=31.19 | c_loss=27.213 q=-1.969 div=0.1002 α=0.274
+ep020 | delay=36.17 energy=0.8297 viol=1.000 p95=47.85 | c_loss=0.489 q=-35.560 div=0.0023 α=5.172
+ep040 | delay=11.17 energy=0.7542 viol=0.533 p95=18.10 | c_loss=0.451 q=-54.496 div=0.0294 α=11.164
+ep060 | delay= 9.45 energy=0.5984 viol=0.300 p95=13.28 | c_loss=0.502 q=-63.415 div=0.0350 α=14.377
+ep080 | delay= 8.57 energy=0.5979 viol=0.133 p95=13.81 | c_loss=0.605 q=-67.187 div=0.0457 α=16.481
+ep100 | delay= 8.51 energy=0.7319 viol=0.167 p95=13.33 | c_loss=0.605 q=-68.763 div=0.0527 α=17.440
+ep120 | delay= 8.94 energy=0.6120 viol=0.233 p95=15.23 | c_loss=0.673 q=-71.012 div=0.0539 α=17.329
+ep140 | delay= 7.82 energy=0.6809 viol=0.033 p95=10.46 | c_loss=0.645 q=-66.885 div=0.0551 α=15.237
+ep160 | delay= 9.70 energy=0.5864 viol=0.267 p95=14.28 | c_loss=0.741 q=-65.825 div=0.0526 α=13.325
+ep180 | delay= 9.24 energy=0.5656 viol=0.233 p95=13.97 | c_loss=0.719 q=-65.919 div=0.0465 α=11.807
+ep200 | delay=11.16 energy=0.6992 viol=0.400 p95=16.36 | c_loss=0.794 q=-67.982 div=0.0504 α=11.538
+ep220 | delay=10.17 energy=0.5953 viol=0.300 p95=12.95 | c_loss=0.750 q=-66.066 div=0.0500 α=10.785
+ep240 | delay= 9.47 energy=0.5485 viol=0.200 p95=13.77 | c_loss=0.744 q=-65.985 div=0.0490 α=10.758
+ep260 | delay=10.46 energy=0.5154 viol=0.300 p95=16.31 | c_loss=0.829 q=-64.981 div=0.0452 α=10.780
+ep280 | delay=10.01 energy=0.7132 viol=0.233 p95=15.36 | c_loss=0.713 q=-67.248 div=0.0528 α=10.461
+ep299 | delay=11.26 energy=0.4785 viol=0.367 p95=18.39 | c_loss=0.713 q=-67.388 div=0.0507 α=10.350
+[saved] result2/frac\dyn_diff_s2

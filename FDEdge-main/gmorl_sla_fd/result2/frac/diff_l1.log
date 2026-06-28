@@ -1,0 +1,7 @@
+dev=cuda actor=diffusion tag=diff_l1 iters=4000 N=5 deadline=7.0 e_f=20% sla_λ=1.0
+it    0 loss=1.879 | w0: d=5.26 e=0.0967 v=0.15 | w1: d=5.77 e=0.0966 v=0.22
+it 1000 loss=1.346 | w0: d=6.21 e=0.0607 v=0.08 | w1: d=3.42 e=0.0969 v=0.00
+it 2000 loss=1.326 | w0: d=6.17 e=0.0607 v=0.04 | w1: d=3.20 e=0.0971 v=0.00
+it 3000 loss=1.306 | w0: d=6.52 e=0.0607 v=0.15 | w1: d=3.17 e=0.0971 v=0.00
+it 3999 loss=1.310 | w0: d=6.57 e=0.0607 v=0.20 | w1: d=3.15 e=0.0971 v=0.00
+[saved] result2/frac\diff_l1

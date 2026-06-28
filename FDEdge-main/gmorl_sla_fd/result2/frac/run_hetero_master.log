@@ -1,0 +1,12 @@
+[12:45:04] === 异构 env: 扩散(sparsemax+候选) vs 高斯, 同协议 ===
+[12:45:04] >>> seq_het_diff
+[12:54:26] <<< seq_het_diff DONE
+[12:54:26] >>> seq_het_gauss
+[12:57:16] <<< seq_het_gauss DONE
+[12:57:16] >>> eval_m1
+[12:59:06] <<< eval_m1 DONE
+[12:59:06] >>> eval_m16
+[13:01:05] <<< eval_m16 DONE
+[13:01:07] >>> eval_m32
+[13:03:06] <<< eval_m32 DONE
+[13:03:07] === DONE ===

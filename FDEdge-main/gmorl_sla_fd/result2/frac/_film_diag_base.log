@@ -1,0 +1,39 @@
+C:\Users\����\AppData\Local\Temp\claude\D--python-project----5\cc14f2bb-1e73-40ce-9aff-f5ab40b725d6\scratchpad\diag_base_diffusion.py:32: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  sd = torch.load(os.path.join(ROOT, tag, 'actor.pt'), map_location=dev)
+### DIFF_TAG=seq_het_sacfilm  GAUS_TAG=seq_het_gaussfilm ###
+==============================================================================
+探针 A/B/C/D: 同一状态, 各 ω 采 256 样本 (随机) — 看响应/锐度/多样性/全展开覆盖
+==============================================================================
+
+--- 状态 seed=0  link=[1. 1. 1. 1. 1.]  q=[0.   0.   0.01 0.01 0.  ] ---
+  w=0.0 [DIFF] K̄=2.04 Kdist(1..5)=[0, 247, 9, 0, 0] sharp=0.65 #supp=3 div(L1)=0.199 full?=False
+          top-supp=[((1, 0, 0, 1, 0), 247), ((1, 0, 0, 1, 1), 8), ((1, 0, 1, 1, 0), 1)]
+  w=0.0 [GAUS] K̄=3.00 Kdist(1..5)=[0, 0, 256, 0, 0] sharp=0.43 #supp=1 div(L1)=0.153 full?=False
+  w=0.5 [DIFF] K̄=2.23 Kdist(1..5)=[0, 204, 45, 7, 0] sharp=0.62 #supp=6 div(L1)=0.324 full?=False
+          top-supp=[((1, 0, 0, 1, 0), 198), ((1, 1, 0, 1, 0), 36), ((1, 0, 0, 1, 1), 7)]
+  w=0.5 [GAUS] K̄=4.99 Kdist(1..5)=[0, 0, 0, 2, 254] sharp=0.34 #supp=2 div(L1)=0.210 full?=True
+  w=1.0 [DIFF] K̄=2.35 Kdist(1..5)=[0, 169, 85, 2, 0] sharp=0.61 #supp=5 div(L1)=0.784 full?=False
+          top-supp=[((1, 1, 0, 0, 0), 103), ((1, 1, 0, 1, 0), 83), ((1, 0, 0, 1, 0), 66)]
+  w=1.0 [GAUS] K̄=4.00 Kdist(1..5)=[0, 0, 0, 256, 0] sharp=0.30 #supp=1 div(L1)=0.143 full?=False
+  [DIFF det@w1] 8 次确定性采样 K=[3, 2, 2, 3, 3, 3, 2, 3] sharp=[0.5, 0.61, 0.67, 0.43, 0.44, 0.47, 0.66, 0.5]
+
+--- 状态 seed=7  link=[1. 1. 1. 1. 1.]  q=[0.   0.   0.01 0.01 0.01] ---
+  w=0.0 [DIFF] K̄=2.03 Kdist(1..5)=[0, 249, 7, 0, 0] sharp=0.65 #supp=3 div(L1)=0.168 full?=False
+          top-supp=[((1, 0, 0, 1, 0), 249), ((1, 0, 0, 1, 1), 6), ((1, 1, 0, 1, 0), 1)]
+  w=0.0 [GAUS] K̄=3.00 Kdist(1..5)=[0, 0, 256, 0, 0] sharp=0.44 #supp=1 div(L1)=0.162 full?=False
+  w=0.5 [DIFF] K̄=2.27 Kdist(1..5)=[0, 201, 40, 15, 0] sharp=0.61 #supp=8 div(L1)=0.318 full?=False
+          top-supp=[((1, 0, 0, 1, 0), 191), ((1, 1, 0, 1, 0), 30), ((1, 1, 0, 1, 1), 13)]
+  w=0.5 [GAUS] K̄=4.99 Kdist(1..5)=[0, 0, 0, 3, 253] sharp=0.35 #supp=3 div(L1)=0.218 full?=True
+  w=1.0 [DIFF] K̄=2.30 Kdist(1..5)=[0, 183, 69, 4, 0] sharp=0.61 #supp=6 div(L1)=0.769 full?=False
+          top-supp=[((1, 1, 0, 0, 0), 115), ((1, 0, 0, 1, 0), 68), ((1, 1, 0, 1, 0), 67)]
+  w=1.0 [GAUS] K̄=4.00 Kdist(1..5)=[0, 0, 0, 256, 0] sharp=0.29 #supp=1 div(L1)=0.146 full?=False
+  [DIFF det@w1] 8 次确定性采样 K=[2, 2, 3, 3, 2, 2, 2, 2] sharp=[0.64, 0.64, 0.42, 0.47, 0.63, 0.62, 0.67, 0.67]
+
+==============================================================================
+探针 E: 真实状态下, 扩散 best-of-32 vs 候选字典 env-真最优 (同一标量化)
+==============================================================================
+  w=0.0 | 平均 gap(env最优 - 扩散best32) = +0.023 | 支撑命中率 = 3/12 | (gap≈0=扩散能覆盖最优; 命中低=支撑选错)
+  w=0.5 | 平均 gap(env最优 - 扩散best32) = -0.006 | 支撑命中率 = 0/12 | (gap≈0=扩散能覆盖最优; 命中低=支撑选错)
+  w=1.0 | 平均 gap(env最优 - 扩散best32) = +0.113 | 支撑命中率 = 1/12 | (gap≈0=扩散能覆盖最优; 命中低=支撑选错)
+
+[done]

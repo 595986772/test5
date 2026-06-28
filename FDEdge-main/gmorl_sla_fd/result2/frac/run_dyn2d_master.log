@@ -1,0 +1,8 @@
+[17:44:18] === dyn2 @ deadline=14 (coord=0.10 dl=0.15): diffusion vs gauss, seed0 ===
+[17:44:18] >>> dyn2_diff14
+[17:57:26] <<< dyn2_diff14 DONE
+[17:57:27] >>> dyn2_gauss14
+[18:00:13] <<< dyn2_gauss14 DONE
+[18:00:13] >>> eval_m1
+[18:02:02] <<< eval_m1 DONE
+[18:02:03] === DONE ===

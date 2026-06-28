@@ -1,0 +1,12 @@
+[20:01:37] === 路②正式: div=0.05 抗塌缩扩散-SAC ===
+[20:01:37] >>> seq_het_sac05
+[20:16:22] <<< seq_het_sac05 DONE
+[20:16:22] >>> eval_seq_het_sac05_m1
+[20:18:22] <<< eval_seq_het_sac05_m1 DONE
+[20:18:23] >>> eval_seq_het_sac05_m32
+[20:20:37] <<< eval_seq_het_sac05_m32 DONE
+[20:20:37] >>> diag_seq_het_sac05_base
+[20:20:44] <<< diag_seq_het_sac05_base DONE
+[20:20:44] >>> diag_seq_het_sac05_critic
+[20:20:50] <<< diag_seq_het_sac05_critic DONE
+[20:20:51] === DONE ===

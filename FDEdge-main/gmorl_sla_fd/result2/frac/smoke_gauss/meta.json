@@ -1,0 +1,17 @@
+{
+  "actor": "mlp",
+  "tag": "smoke_gauss",
+  "episodes": 50,
+  "seed": 0,
+  "n_srv": 5,
+  "deadline": 6.0,
+  "e_f_ratio": 0.1,
+  "agg_ratio": 0.05,
+  "hetero": false,
+  "horizon": 30,
+  "T": 5,
+  "bc_eta": 1.0,
+  "alpha": 0.02,
+  "sla_lambda": 1.0,
+  "omega_sample": "ushaped"
+}

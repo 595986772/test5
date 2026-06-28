@@ -1,0 +1,51 @@
+{
+  "ref_delay": 20.29822422168648,
+  "ref_energy": 1.0283760431753233,
+  "seed0": 1000,
+  "k": 10,
+  "n_omega": 11,
+  "viol_thresh": 0.1,
+  "tags": [
+    "dyn2_diffM1",
+    "dyn2_gauss14"
+  ],
+  "actors": [
+    "diffusion",
+    "mlp"
+  ],
+  "ecfg": {
+    "n_servers": 5,
+    "deadline": 20.0,
+    "e_f_ratio": 0.2,
+    "agg_ratio": 0.1,
+    "idle_ratio": 0.4,
+    "keep_alive": 0,
+    "arrival_dt": 6.0,
+    "horizon": 30,
+    "task_size": 20000000.0,
+    "chan_vol": 0.35,
+    "bg_load": 0.12,
+    "dl_ratio": 0.15,
+    "coord_delay_ratio": 0.1
+  },
+  "per_tag": {
+    "dyn2_diffM1": {
+      "n_srv": 5,
+      "T": 20,
+      "start_mode": "randn",
+      "sparse": true,
+      "omega_film": false,
+      "delay_scale": 1.5,
+      "sla_lambda": 3.0
+    },
+    "dyn2_gauss14": {
+      "n_srv": 5,
+      "T": 5,
+      "start_mode": "randn",
+      "sparse": true,
+      "omega_film": false,
+      "delay_scale": 1.5,
+      "sla_lambda": 3.0
+    }
+  }
+}

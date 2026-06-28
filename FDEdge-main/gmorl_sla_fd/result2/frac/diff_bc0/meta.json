@@ -1,0 +1,18 @@
+{
+  "actor": "diffusion",
+  "tag": "diff_bc0",
+  "episodes": 200,
+  "seed": 0,
+  "n_srv": 5,
+  "deadline": 7.0,
+  "e_f_ratio": 0.2,
+  "agg_ratio": 0.1,
+  "q_max_ratio": 0.2,
+  "hetero": false,
+  "horizon": 30,
+  "T": 5,
+  "bc_eta": 0.0,
+  "alpha": 0.02,
+  "sla_lambda": 1.0,
+  "omega_sample": "ushaped"
+}

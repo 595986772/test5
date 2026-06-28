@@ -1,0 +1,6 @@
+[22:35:10] === sparsemax 扩散 bc_eta=0.02 (稳定与激进的甜点) ===
+[22:35:10] >>> seq_sp_diff_bc02
+[22:40:00] <<< seq_sp_diff_bc02 DONE
+[22:40:00] >>> eval_sp_bc02
+[22:40:53] <<< eval_sp_bc02 DONE
+[22:40:55] === DONE ===

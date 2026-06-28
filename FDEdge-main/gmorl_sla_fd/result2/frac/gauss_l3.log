@@ -1,0 +1,7 @@
+dev=cuda actor=mlp tag=gauss_l3 iters=4000 N=5 deadline=7.0 e_f=20% sla_λ=3.0
+it    0 loss=1.749 | w0: d=4.23 e=0.0967 v=0.00 | w1: d=4.29 e=0.0965 v=0.00
+it 1000 loss=1.410 | w0: d=6.24 e=0.0656 v=0.07 | w1: d=3.87 e=0.0970 v=0.00
+it 2000 loss=1.370 | w0: d=6.27 e=0.0633 v=0.08 | w1: d=3.37 e=0.0970 v=0.00
+it 3000 loss=1.331 | w0: d=6.30 e=0.0607 v=0.09 | w1: d=3.20 e=0.0971 v=0.00
+it 3999 loss=1.344 | w0: d=6.27 e=0.0607 v=0.09 | w1: d=3.21 e=0.0971 v=0.00
+[saved] result2/frac\gauss_l3
